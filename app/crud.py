@@ -5,7 +5,6 @@ from typing import List
 
 '''
 Driver CRUD
-without paginations
 '''
 
 def get_drivers(db: Session) -> List[Driver]:
@@ -36,7 +35,6 @@ def delete_driver(db: Session, driver_id: int) -> Driver:
 
 '''
 Circuit CRUD
-without paginations
 '''
 
 def get_circuits(db: Session) -> List[Circuit]:
@@ -65,7 +63,6 @@ def delete_circuit(db: Session, circuit_id: int) -> Circuit:
 
 '''
 Race CRUD
-without paginations
 '''
 
 def get_races(db: Session) -> List[Race]:
