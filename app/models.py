@@ -1,5 +1,5 @@
 from sqlalchemy import Integer, String, Column, ForeignKey, Date, DECIMAL, Boolean, PrimaryKeyConstraint
-from database import Base
+from app.database import Base
 
 class Driver(Base):
     __tablename__ = "drivers"

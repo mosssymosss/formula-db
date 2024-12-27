@@ -85,6 +85,7 @@ def update_race(db: Session, driver_id: int, circuit_id: int, race_date: str, ra
 
 def delete_race(db: Session, driver_id: int, circuit_id: int, race_date: str) -> Race:
     db_race = db.query(Race).filter(Race.driver_id == driver_id, Race.circuit_id == circuit_id, Race.race_date == race_date).first()  
+    
     db.delete(db_race)
     db.commit() 
     return db_race
