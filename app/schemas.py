@@ -12,8 +12,8 @@ class DriverBase(BaseModel):
     name: str 
     nationality: str 
     team: str
-    tier: str
-    dob: str
+    #tier: str
+    dob: date
 
 class DriverCreate(DriverBase):
     pass

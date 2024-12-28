@@ -43,7 +43,7 @@ def create_table():
         cursor = connection.cursor()
 
         cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Driver (
+        CREATE TABLE IF NOT EXISTS Drivers (
             driver_id INT PRIMARY KEY,
             number INT,
             name VARCHAR(100),
@@ -55,7 +55,7 @@ def create_table():
         """)
 
         cursor.execute("""
-        CREATE TABLE Circuit (
+        CREATE TABLE Circuits (
             circuit_id INT PRIMARY KEY,
             name VARCHAR(100),
             location VARCHAR(100),
@@ -66,7 +66,7 @@ def create_table():
         """)
 
         cursor.execute("""
-        CREATE TABLE Race (
+        CREATE TABLE Races (
             driver_id INT,
             circuit_id INT,
             race_date DATE,
@@ -75,8 +75,8 @@ def create_table():
             is_fastest_lap BOOLEAN,
             start_place INT,
             PRIMARY KEY (driver_id, circuit_id, race_date),
-            FOREIGN KEY (driver_id) REFERENCES Driver(driver_id),
-            FOREIGN KEY (circuit_id) REFERENCES Circuit(circuit_id)
+            FOREIGN KEY (driver_id) REFERENCES Drivers(driver_id),
+            FOREIGN KEY (circuit_id) REFERENCES Circuits(circuit_id)
         );
         """)
 
