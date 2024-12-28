@@ -4,3 +4,8 @@
 # Python
 .env
 __pycache__/
+
+# Alembic
+
+alembic/versions/*.pyc
+alembic/versions/__pycache__/

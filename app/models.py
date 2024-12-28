@@ -29,14 +29,10 @@ class Race(Base):
 
     driver_id = Column(Integer, ForeignKey("drivers.driver_id"), primary_key=True)
     circuit_id = Column(Integer, ForeignKey("circuits.circuit_id"), primary_key=True)
-    race_date = Column(Date, nullable=False)
+    race_date = Column(Date, nullable=False, primary_key=True)
     place = Column(Integer, nullable=False)
     points = Column(Integer, nullable=False)
     is_fastest_lap = Column(Boolean, nullable=False)
     start_place = Column(Integer, nullable=False)
-
-    __table_args__ = (
-        PrimaryKeyConstraint("race_date", "driver_id", "circuit_id"),
-    )
 
 
