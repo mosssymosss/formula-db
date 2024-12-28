@@ -56,18 +56,18 @@ def delete_circuit(circuit_id: int, db: Session = Depends(get_db)):
 Race Endpoints
 '''
 
-@app.post("/race/", response_model=schemas.RaceResponse)
+@app.post("/races/", response_model=schemas.RaceResponse)
 def create_race(race: schemas.RaceCreate, db: Session = Depends(get_db)):
     return crud.create_race(db, race)
 
-@app.get("/race/", response_model=List[schemas.RaceResponse])
+@app.get("/races/", response_model=List[schemas.RaceResponse])
 def get_races(db: Session = Depends(get_db)):
     return crud.get_races(db)
 
-@app.put("/race", response_model=schemas.RaceResponse)
+@app.put("/races/", response_model=schemas.RaceResponse)
 def update_race(driver_id: int, circuit_id: int, race_date: str, race: schemas.RaceUpdate, db: Session = Depends(get_db)):
     return crud.update(db, driver_id, circuit_id, race_date)
 
-@app.delete("races/{driver_id}/{circuit_id}/{race_date}", response_model=schemas.RaceResponse)
+@app.delete("/races/{driver_id}/{circuit_id}/{race_date}", response_model=schemas.RaceResponse)
 def delete_race(driver_id: int, circuit_id: int, race_date: str, db: Session = Depends(get_db)):
     return crud.delete_race(db, driver_id, circuit_id, race_date)

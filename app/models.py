@@ -9,7 +9,7 @@ class Driver(Base):
     name = Column(String(100), nullable=False)
     nationality = Column(String(50), nullable=False)
     team = Column(String(50), nullable=False)
-    tier = Column(String(2), nullable=False)
+    #tier = Column(String(2), nullable=False)
     dob = Column(Date, nullable=False)
 
 
@@ -17,11 +17,11 @@ class Circuit(Base):
     __tablename__ = "circuits"
 
     circuit_id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(100))
-    location = Column(String(100))
-    length = Column(DECIMAL(10,2))
-    laps = Column(Integer)
-    lap_record = Column(String(50))
+    name = Column(String(100), nullable=False)
+    location = Column(String(100), nullable=False)
+    length = Column(DECIMAL(10,2), nullable=False)
+    laps = Column(Integer, nullable=False)
+    lap_record = Column(String(50), nullable=False)
 
 
 class Race(Base):
