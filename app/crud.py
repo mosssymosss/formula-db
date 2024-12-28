@@ -5,6 +5,13 @@ from typing import List
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 
+
+
+def reset_db(db: Session):
+    delete_all_races(db)
+    delete_all_drivers(db)
+    delete_all_circuits(db)
+
 '''
 Driver CRUD
 '''
@@ -49,7 +56,7 @@ def delete_driver(db: Session, driver_id: int) -> Driver:
     return {"detail": f"Driver {driver_id} has been deleted"}
 
 
-def get_drivers_filter(db, nationality: str = None, team: str = None, number: int = None, circuit_id: str = None):
+def get_drivers_filter(db: Session, nationality: str = None, team: str = None, number: int = None, circuit_id: str = None) -> List[Driver]:
     query = db.query(Driver)
 
     if nationality:
@@ -65,6 +72,41 @@ def get_drivers_filter(db, nationality: str = None, team: str = None, number: in
     if not drivers:
         raise HTTPException(status_code=404, detail="No drivers found")
     return drivers
+
+def delete_all_drivers(db: Session) -> List[Driver]:
+    drivers = db.query(Driver).all()
+    if not drivers:
+        raise HTTPException(status_code=404, detail="No drivers found")
+    db.query(Driver).delete()
+    db.commit()
+    return drivers
+
+def get_drivers_races(db: Session, driver_id: int) -> List[dict]:
+    races = (db.query(Race, Circuit).join(Circuit, Race.circuit_id == Circuit.circuit_id).filter(Race.driver_id == driver_id).all())
+    if not races:
+        raise HTTPException(status_code=404, detail="No races fount for driver")
+    
+    return [
+        {
+            "driver_id": race.Race.driver_id,
+            "circuit_id": race.Race.circuit_id,
+            "race_date": race.Race.race_date,
+            "place": race.Race.place,
+            "points": race.Race.points,
+            "is_fastest_lap": race.Race.is_fastest_lap,
+            "start_place": race.Race.start_place,
+            "circuit_details": {
+                "name": race.Circuit.name,
+                "location": race.Circuit.location,
+                "length": race.Circuit.length,
+                "laps": race.Circuit.laps,
+                "lap_record": race.Circuit.lap_record,
+            },
+        }
+        for race in races
+    ]
+
+
 
 '''
 Circuit CRUD
@@ -105,6 +147,14 @@ def delete_circuit(db: Session, circuit_id: int) -> Circuit:
     db.delete(db_circuit)
     db.commit()
     return {"detail": f"Circuit {circuit_id} has been deleted"}
+
+def delete_all_circuits(db: Session) -> List[Circuit]:
+    circuits = db.query(Circuit).all()
+    if not circuits:
+        raise HTTPException(status_code=404, detail="No circuits found")
+    db.query(Circuit).delete()
+    db.commit()
+    return circuits
 
 '''
 Race CRUD
@@ -150,4 +200,12 @@ def delete_race(db: Session, driver_id: int, circuit_id: int, race_date: str) ->
     db.delete(db_race)
     db.commit() 
     return {"detail": f"Race on {race_date} for driver {driver_id} at circuit {circuit_id} has been deleted"}
+
+def delete_all_races(db: Session) -> List[Race]:
+    races = db.query(Race).all()
+    if not races:
+        raise HTTPException(status_code=404, detail="No races found")
+    db.query(Race).delete()
+    db.commit()
+    return races
     

@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date
 
+
+
 '''
 Driver Schemas
 '''
@@ -62,6 +64,13 @@ class CircuitResponse(CircuitBase):
         orm_mode = True
 
 
+class CircuitDetail(BaseModel):
+    name: str
+    location: str
+    length: float
+    laps: int
+    lap_record: str
+
 '''
 Race Schemas
 '''
@@ -87,5 +96,10 @@ class RaceUpdate(BaseModel):
 
 
 class RaceResponse(RaceBase):
+    class Config:
+        orm_mode = True
+
+class RaceWithCircuitResponse(RaceBase):
+    circuit: CircuitDetail
     class Config:
         orm_mode = True

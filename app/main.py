@@ -10,6 +10,12 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
+@app.delete("/reset/")
+def reset_db(db: Session = Depends(get_db)):
+    crud.reset_db(db)
+    return {"detail": "Database reset"}
+
+
 '''
 Driver Endpoints
 '''
@@ -38,6 +44,10 @@ def delete_driver(driver_id: int, db: Session = Depends(get_db)):
 def get_drivers_filter(db: Session = Depends(get_db), nationality: str = None, team: str = None, number: int = None, circuit_id: str = None):
     return crud.get_drivers_filter(db, nationality, team, number, circuit_id)
 
+@app.get("/drivers/{driver_id}/race_results", response_model=List[schemas.RaceWithCircuitResponse])
+def get_driver_races(driver_id: int, db: Session = Depends(get_db)):
+    return crud.get_drivers_races(db, driver_id)
+
 
 '''
 Circuit Endpoints
@@ -64,6 +74,8 @@ def delete_circuit(circuit_id: int, db: Session = Depends(get_db)):
     return crud.delete_circuit(db, circuit_id)
 
 
+
+
 '''
 Race Endpoints
 '''
@@ -87,3 +99,4 @@ def update_race(driver_id: int, circuit_id: int, race_date: str, race: schemas.R
 @app.delete("/races/{driver_id}/{circuit_id}/{race_date}", response_model=schemas.RaceResponse)
 def delete_race(driver_id: int, circuit_id: int, race_date: str, db: Session = Depends(get_db)):
     return crud.delete_race(db, driver_id, circuit_id, race_date)
+
