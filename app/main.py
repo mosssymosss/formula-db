@@ -30,6 +30,7 @@ def update_driver(driver_id: int, driver: schemas.DriverUpdate, db: Session = De
 def delete_driver(driver_id: int, db: Session = Depends(get_db)):
     return crud.delete_driver(db, driver_id)
 
+
 '''
 Circuit Endpoints
 '''
@@ -49,6 +50,7 @@ def update_circuit(circuit_id: int, circuit: schemas.CircuitUpdate, db: Session 
 @app.delete("/circuits/{circuit_id}", response_model=schemas.CircuitResponse)
 def delete_circuit(circuit_id: int, db: Session = Depends(get_db)):
     return crud.delete_circuit(db, circuit_id)
+
 
 '''
 Race Endpoints
