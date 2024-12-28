@@ -4,7 +4,7 @@ Run this command
 
     pip install -r requirements.txt
 
-You need to have a .env file that as your postgres configurations, i.e.
+You need to have a .env file that has your postgres configurations, i.e.
 
     POSTGRES_USER={your_username}
     POSTGRES_PASSWORD={your_password}
