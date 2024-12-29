@@ -30,8 +30,8 @@ def reset_db(db: Session):
 Driver CRUD
 '''
 
-def get_drivers(db: Session) -> List[Driver]:
-    return db.query(Driver).all()
+def get_drivers(db: Session, limit: int = 10, offset: int = 0) -> List[Driver]:
+    return db.query(Driver).limit(limit).offset(offset).all()
 
 
 def get_driver_by_id(db: Session, driver_id: int):
@@ -70,7 +70,7 @@ def delete_driver(db: Session, driver_id: int) -> Driver:
     return {"detail": f"Driver {driver_id} has been deleted"}
 
 
-def get_drivers_filter(db: Session, nationality: str = None, team: str = None, number: int = None, circuit_id: str = None, dob: date = None) -> List[Driver]:
+def get_drivers_filter(db: Session, nationality: str = None, team: str = None, number: int = None, circuit_id: str = None, dob: date = None, limit: int = 10, offset: int = 0) -> List[Driver]:
     query = db.query(Driver)
 
     if nationality:
@@ -84,7 +84,7 @@ def get_drivers_filter(db: Session, nationality: str = None, team: str = None, n
     if dob:
         query = query.filter(Driver.dob == dob)
 
-    drivers = query.all()
+    drivers = query.limit(limit).offset(offset).all()
     if not drivers:
         raise HTTPException(status_code=404, detail="No drivers found")
     return drivers
@@ -97,8 +97,8 @@ def delete_all_drivers(db: Session) -> List[Driver]:
     db.commit()
     return drivers
 
-def get_drivers_races(db: Session, driver_id: int) -> List[dict]:
-    races = (db.query(Race, Circuit).join(Circuit, Race.circuit_id == Circuit.circuit_id).filter(Race.driver_id == driver_id).all())
+def get_drivers_races(db: Session, driver_id: int, limit: int = 10, offset: int = 0) -> List[dict]:
+    races = (db.query(Race, Circuit).join(Circuit, Race.circuit_id == Circuit.circuit_id).filter(Race.driver_id == driver_id).limit(limit).offset(offset).all())
     if not races:
         raise HTTPException(status_code=404, detail="No races fount for driver")
     
@@ -122,7 +122,7 @@ def get_drivers_races(db: Session, driver_id: int) -> List[dict]:
         for race in races
     ]
 
-def get_drivers_total_points(db: Session, driver_id: int) -> List[dict]:
+def get_drivers_total_points(db: Session, driver_id: int, limit: int = 10, offset: int = 0) -> List[dict]:
     query = (
         db.query(Driver.driver_id, Driver.name, Driver.team, func.sum(Race.points).label("total_points"))
         .join(Race, Driver.driver_id == Race.driver_id)
@@ -132,7 +132,7 @@ def get_drivers_total_points(db: Session, driver_id: int) -> List[dict]:
     if driver_id:
         query = query.filter(Driver.driver_id == driver_id)
 
-    driver_points = query.order_by(func.sum(Race.points).desc()).all()
+    driver_points = query.order_by(func.sum(Race.points).desc()).limit(limit).offset(offset).all()
 
     if not driver_points:
         raise HTTPException(status_code=404, detail="No drivers found with points data")
@@ -147,13 +147,14 @@ def get_drivers_total_points(db: Session, driver_id: int) -> List[dict]:
         for dp in driver_points
     ]
 
-def get_drivers_with_multiple_wins(db: Session) -> List[Driver]:
+def get_drivers_with_multiple_wins(db: Session, limit: int = 10, offset: int = 0) -> List[Driver]:
     query = (
         db.query(Driver.driver_id, Driver.name, func.count(Race.circuit_id.distinct()).label("num_circuits"),)
         .join(Race, Driver.driver_id == Race.driver_id)
         .filter(Race.place == 1)
         .group_by(Driver.driver_id, Driver.name)
         .having(func.count(Race.circuit_id.distinct()) > 1)
+        .limit(limit).offset(offset)
         .all())
     
     if not query:
@@ -172,8 +173,8 @@ def get_drivers_with_multiple_wins(db: Session) -> List[Driver]:
 Circuit CRUD
 '''
 
-def get_circuits(db: Session) -> List[Circuit]:
-    return db.query(Circuit).all()
+def get_circuits(db: Session, limit: int = 10, offset: int = 0) -> List[Circuit]:
+    return db.query(Circuit).limit(limit).offset(offset).all()
 
 def get_circuit_by_id(db: Session, circuit_id: int):
     circuit = db.query(Circuit).filter(Circuit.circuit_id == circuit_id).first()
@@ -216,7 +217,7 @@ def delete_all_circuits(db: Session) -> List[Circuit]:
     db.commit()
     return circuits
 
-def get_circuits_with_filter(db: Session, location: str = None, minlength: float = None, maxlength: float = None, minlaps: int = None, maxlaps: int = None) -> List[Circuit]:
+def get_circuits_with_filter(db: Session, location: str = None, minlength: float = None, maxlength: float = None, minlaps: int = None, maxlaps: int = None, limit: int = 10, offset: int = 0) -> List[Circuit]:
     query = db.query(Circuit)
 
     if location:
@@ -230,37 +231,14 @@ def get_circuits_with_filter(db: Session, location: str = None, minlength: float
     if maxlaps:
         query = query.filter(Circuit.laps <= maxlaps)
 
-    circuits = query.all()
+    circuits = query.limit(limit).offset(offset).all()
     if not circuits:
         raise HTTPException(status_code=404, detail="No circuits found")
     return circuits
 
-def get_races_with_filters(db: Session, driver_id: int = None, circuit_id: int = None, start_date: date = None, end_date: date = None, min_points: int = None, max_points: int = None, fastest_lap: bool = None) -> List[Race]:
-    query = db.query(Race)
 
-    if driver_id:
-        query = query.filter(Race.driver_id == driver_id)
-    if circuit_id:
-        query = query.filter(Race.circuit_id == circuit_id)
-    if start_date:
-        query = query.filter(Race.race_date >= start_date)
-    if end_date:
-        query = query.filter(Race.race_date <= end_date)
-    if min_points:
-        query = query.filter(Race.points >= min_points)
-    if max_points:
-        query = query.filter(Race.points <= max_points)
-    if fastest_lap:
-        query = query.filter(Race.is_fastest_lap == fastest_lap)
-
-    races = query.all()
-    if not races:
-        raise HTTPException(status_code=404, detail="No races found")
-    return races
-
-def get_sorted_circuits(db: Session, sort_by: str) -> List[Circuit]:
+def get_sorted_circuits(db: Session, sort_by: str, limit: int = 10, offset: int = 0) -> List[Circuit]:
     query = db.query(Circuit)
-
 
     if sort_by == "length":
         query = query.order_by(Circuit.length.desc())
@@ -271,12 +249,12 @@ def get_sorted_circuits(db: Session, sort_by: str) -> List[Circuit]:
     else:
         raise HTTPException(status_code=400, detail="Invalid sort_by parameter. You can only sort by length, laps or lap_record")
 
-    circuits = query.all()
+    circuits = query.limit(limit).offset(offset).all()
     if not circuits:
         raise HTTPException(status_code=404, detail="No circuits found")
     return circuits
 
-def get_most_popular_circuits(db: Session) -> dict:
+def get_most_popular_circuit(db: Session) -> dict:
     query = (db.query(Circuit.name, Circuit.location, func.count(Race.circuit_id).label("num_races"),)
             .join(Race, Circuit.circuit_id == Race.circuit_id)
             .group_by(Circuit.circuit_id, Circuit.name, Circuit.location)
@@ -292,19 +270,24 @@ def get_most_popular_circuits(db: Session) -> dict:
             "num_races": query.num_races,
             }
 
-def search_info(db: Session, search: str) -> List[Circuit]:
-    sql = text("SELECT * FROM circuits WHERE info::text ~* :search")
-    circuits = db.execute(sql, {"search": search}).fetchall()
+def search_info(db: Session, search: str, limit: int = 10, offset: int = 0) -> List[Circuit]:
+    sql = text("""
+                SELECT * FROM circuits 
+                WHERE info::text ~* :search
+                LIMIT :limit OFFSET :offset
+        """)
+    circuits = db.execute(sql, {"search": search, "limit": limit, "offset": offset}).fetchall()
     if not circuits:
         raise HTTPException(status_code=404, detail="No circuits found")
     return circuits
 
 '''
+
 Race CRUD
 '''
 
-def get_races(db: Session) -> List[Race]:
-    return db.query(Race).all()
+def get_races(db: Session, limit: int = 10, offset: int = 0) -> List[Race]:
+    return db.query(Race).limit(limit).offset(offset).all()
 
 def get_race_by_ids(db: Session, driver_id: int, circuit_id: int, race_date):
     race = db.query(Race).filter(
@@ -352,7 +335,30 @@ def delete_all_races(db: Session) -> List[Race]:
     db.commit()
     return races
     
-def increment_fastest_lap_points(db: Session) -> List[Race]:
+def get_races_with_filters(db: Session, driver_id: int = None, circuit_id: int = None, start_date: date = None, end_date: date = None, min_points: int = None, max_points: int = None, fastest_lap: bool = None, limit: int = 10, offset: int = 0) -> List[Race]:
+    query = db.query(Race)
+
+    if driver_id:
+        query = query.filter(Race.driver_id == driver_id)
+    if circuit_id:
+        query = query.filter(Race.circuit_id == circuit_id)
+    if start_date:
+        query = query.filter(Race.race_date >= start_date)
+    if end_date:
+        query = query.filter(Race.race_date <= end_date)
+    if min_points:
+        query = query.filter(Race.points >= min_points)
+    if max_points:
+        query = query.filter(Race.points <= max_points)
+    if fastest_lap:
+        query = query.filter(Race.is_fastest_lap == fastest_lap)
+
+    races = query.limit(limit).offset(offset).all()
+    if not races:
+        raise HTTPException(status_code=404, detail="No races found")
+    return races
+
+def increment_fastest_lap_points(db: Session) -> dict:
     races = db.query(Race).filter(Race.is_fastest_lap == True).all()
 
     if not races:
@@ -362,4 +368,4 @@ def increment_fastest_lap_points(db: Session) -> List[Race]:
         race.points += 1
 
     db.commit()
-    return races    
+    return {"detail": "Fastest lap points have been incremented"}
