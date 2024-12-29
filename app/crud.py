@@ -4,6 +4,7 @@ from app.schemas import DriverCreate, DriverUpdate, CircuitCreate, CircuitUpdate
 from typing import List
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
+from datetime import date
 
 
 
@@ -56,7 +57,7 @@ def delete_driver(db: Session, driver_id: int) -> Driver:
     return {"detail": f"Driver {driver_id} has been deleted"}
 
 
-def get_drivers_filter(db: Session, nationality: str = None, team: str = None, number: int = None, circuit_id: str = None) -> List[Driver]:
+def get_drivers_filter(db: Session, nationality: str = None, team: str = None, number: int = None, circuit_id: str = None, dob: date = None) -> List[Driver]:
     query = db.query(Driver)
 
     if nationality:
@@ -67,6 +68,8 @@ def get_drivers_filter(db: Session, nationality: str = None, team: str = None, n
         query = query.filter(Driver.number == number)
     if circuit_id:
         query = query.join(Race).filter(Race.circuit_id == circuit_id)
+    if dob:
+        query = query.filter(Driver.dob == dob)
 
     drivers = query.all()
     if not drivers:
@@ -156,6 +159,48 @@ def delete_all_circuits(db: Session) -> List[Circuit]:
     db.commit()
     return circuits
 
+def get_circuits_with_filter(db: Session, location: str = None, minlength: float = None, maxlength: float = None, minlaps: int = None, maxlaps: int = None) -> List[Circuit]:
+    query = db.query(Circuit)
+
+    if location:
+        query = query.filter(Circuit.location == location)
+    if minlength:
+        query = query.filter(Circuit.length >= minlength)
+    if maxlength:
+        query = query.filter(Circuit.length <= maxlength)
+    if minlaps:
+        query = query.filter(Circuit.laps >= minlaps)
+    if maxlaps:
+        query = query.filter(Circuit.laps <= maxlaps)
+
+    circuits = query.all()
+    if not circuits:
+        raise HTTPException(status_code=404, detail="No circuits found")
+    return circuits
+
+def get_races_with_filters(db: Session, driver_id: int = None, circuit_id: int = None, start_date: date = None, end_date: date = None, min_points: int = None, max_points: int = None, fastest_lap: bool = None) -> List[Race]:
+    query = db.query(Race)
+
+    if driver_id:
+        query = query.filter(Race.driver_id == driver_id)
+    if circuit_id:
+        query = query.filter(Race.circuit_id == circuit_id)
+    if start_date:
+        query = query.filter(Race.race_date >= start_date)
+    if end_date:
+        query = query.filter(Race.race_date <= end_date)
+    if min_points:
+        query = query.filter(Race.points >= min_points)
+    if max_points:
+        query = query.filter(Race.points <= max_points)
+    if fastest_lap:
+        query = query.filter(Race.is_fastest_lap == fastest_lap)
+
+    races = query.all()
+    if not races:
+        raise HTTPException(status_code=404, detail="No races found")
+    return races
+
 '''
 Race CRUD
 '''
@@ -209,3 +254,14 @@ def delete_all_races(db: Session) -> List[Race]:
     db.commit()
     return races
     
+def increment_fastest_lap_points(db: Session) -> List[Race]:
+    races = db.query(Race).filter(Race.is_fastest_lap == True).all()
+
+    if not races:
+        raise HTTPException(status_code=404, detail="No races found where driver had fastest lap")
+
+    for race in races:
+        race.points += 1
+
+    db.commit()
+    return races    

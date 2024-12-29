@@ -4,6 +4,7 @@ from app import schemas
 from app.database import Base, engine, get_db
 from typing import List
 import app.crud as crud
+from datetime import date
 
 Base.metadata.create_all(bind=engine)
 
@@ -41,8 +42,8 @@ def delete_driver(driver_id: int, db: Session = Depends(get_db)):
     return crud.delete_driver(db, driver_id)
 
 @app.get("/drivers/filters/", response_model=List[schemas.DriverResponse])
-def get_drivers_filter(db: Session = Depends(get_db), nationality: str = None, team: str = None, number: int = None, circuit_id: str = None):
-    return crud.get_drivers_filter(db, nationality, team, number, circuit_id)
+def get_drivers_filter(db: Session = Depends(get_db), nationality: str = None, team: str = None, number: int = None, circuit_id: str = None, dob: date = None):
+    return crud.get_drivers_filter(db, nationality, team, number, circuit_id, dob)
 
 @app.get("/drivers/{driver_id}/race_results", response_model=List[schemas.RaceWithCircuitResponse])
 def get_driver_races(driver_id: int, db: Session = Depends(get_db)):
@@ -73,6 +74,9 @@ def update_circuit(circuit_id: int, circuit: schemas.CircuitUpdate, db: Session 
 def delete_circuit(circuit_id: int, db: Session = Depends(get_db)):
     return crud.delete_circuit(db, circuit_id)
 
+@app.get("/circuits/filters/", response_model=List[schemas.CircuitResponse])
+def get_circuits_with_filter(db: Session = Depends(get_db), location: str = None, minlength: float = None, maxlength: float = None, minlaps: int = None, maxlaps: int = None):
+    return crud.get_circuits_with_filter(db, location, minlength, maxlength, minlaps, maxlaps)
 
 
 
@@ -99,4 +103,12 @@ def update_race(driver_id: int, circuit_id: int, race_date: str, race: schemas.R
 @app.delete("/races/{driver_id}/{circuit_id}/{race_date}", response_model=schemas.RaceResponse)
 def delete_race(driver_id: int, circuit_id: int, race_date: str, db: Session = Depends(get_db)):
     return crud.delete_race(db, driver_id, circuit_id, race_date)
+
+@app.get("/races/filters/", response_model=List[schemas.RaceResponse])
+def get_races_with_filters(db: Session = Depends(get_db), driver_id: int = None, circuit_id: int = None, start_date: date = None, end_date: date = None, min_points: int = None, max_points: int = None, fastest_lap: bool = None):
+    return crud.get_races_with_filters(db, driver_id, circuit_id, start_date, end_date, min_points, max_points, fastest_lap)
+
+@app.put("/races/increment_fastest_lap_points/", response_model=List[schemas.RaceResponse])
+def increment_fastest_lap_points(db: Session = Depends(get_db)):
+    return crud.increment_fastest_lap_points(db)
 
