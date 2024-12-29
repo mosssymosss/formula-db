@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, Column, ForeignKey, Date, DECIMAL, Boolean, PrimaryKeyConstraint
+from sqlalchemy import Integer, String, Column, ForeignKey, Date, DECIMAL, Boolean, PrimaryKeyConstraint, JSON
 from app.database import Base
 
 class Driver(Base):
@@ -22,6 +22,7 @@ class Circuit(Base):
     length = Column(DECIMAL(10,2), nullable=False)
     laps = Column(Integer, nullable=False)
     lap_record = Column(String(50), nullable=False)
+    info = Column(JSON, nullable=True)
 
 
 class Race(Base):

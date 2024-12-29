@@ -5,14 +5,26 @@ from typing import List
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 from datetime import date
-from sqlalchemy import func
+from sqlalchemy import func, text
 
 
 
 def reset_db(db: Session):
-    delete_all_races(db)
-    delete_all_drivers(db)
-    delete_all_circuits(db)
+    try:
+        delete_all_races(db)
+    except HTTPException as e:
+        print(e) 
+        pass
+    try:
+        delete_all_drivers(db)
+    except HTTPException as e:
+        print(e)
+        pass
+    try:
+        delete_all_circuits(db)
+    except HTTPException as e:
+        print(e)
+        pass
 
 '''
 Driver CRUD
@@ -279,6 +291,13 @@ def get_most_popular_circuits(db: Session) -> dict:
             "location": query.location,
             "num_races": query.num_races,
             }
+
+def search_info(db: Session, search: str) -> List[Circuit]:
+    sql = text("SELECT * FROM circuits WHERE info::text ~* :search")
+    circuits = db.execute(sql, {"search": search}).fetchall()
+    if not circuits:
+        raise HTTPException(status_code=404, detail="No circuits found")
+    return circuits
 
 '''
 Race CRUD

@@ -59,6 +59,7 @@ class CircuitBase(BaseModel):
     length: float
     laps: int
     lap_record: str
+    info: Optional[dict]
 
 
 class CircuitCreate(CircuitBase):
