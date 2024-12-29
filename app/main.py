@@ -93,6 +93,10 @@ def get_sorted_circuits(db: Session = Depends(get_db), sort_by: str = None):
 def get_most_popular_circuit(db: Session = Depends(get_db)):
     return crud.get_most_popular_circuits(db)
 
+@app.get("/circuits/search/", response_model=List[schemas.CircuitResponse])
+def search_info(db: Session = Depends(get_db), search: str = None):
+    return crud.search_info(db, search)
+
 
 '''
 Race Endpoints
