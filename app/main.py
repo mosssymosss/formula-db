@@ -49,6 +49,13 @@ def get_drivers_filter(db: Session = Depends(get_db), nationality: str = None, t
 def get_driver_races(driver_id: int, db: Session = Depends(get_db)):
     return crud.get_drivers_races(db, driver_id)
 
+@app.get("/drivers/total_points/", response_model=List[schemas.DriverTotalPointsResponse])
+def get_drivers_total_points(db: Session = Depends(get_db), driver_id: int = None):
+    return crud.get_drivers_total_points(db, driver_id)
+
+@app.get("/drivers/multiple_wins/", response_model=List[schemas.DriverMultipleWinsResponse])
+def get_drivers_with_multiple_wins(db: Session = Depends(get_db)):
+    return crud.get_drivers_with_multiple_wins(db)
 
 '''
 Circuit Endpoints
@@ -78,6 +85,13 @@ def delete_circuit(circuit_id: int, db: Session = Depends(get_db)):
 def get_circuits_with_filter(db: Session = Depends(get_db), location: str = None, minlength: float = None, maxlength: float = None, minlaps: int = None, maxlaps: int = None):
     return crud.get_circuits_with_filter(db, location, minlength, maxlength, minlaps, maxlaps)
 
+@app.get("/circuits/sorted/", response_model=List[schemas.CircuitResponse])
+def get_sorted_circuits(db: Session = Depends(get_db), sort_by: str = None):
+    return crud.get_sorted_circuits(db, sort_by)
+
+@app.get("/circuits/most-popular/", response_model=schemas.CircuitPopularityResponse)
+def get_most_popular_circuit(db: Session = Depends(get_db)):
+    return crud.get_most_popular_circuits(db)
 
 
 '''

@@ -5,6 +5,7 @@ from typing import List
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
 from datetime import date
+from sqlalchemy import func
 
 
 
@@ -109,7 +110,51 @@ def get_drivers_races(db: Session, driver_id: int) -> List[dict]:
         for race in races
     ]
 
+def get_drivers_total_points(db: Session, driver_id: int) -> List[dict]:
+    query = (
+        db.query(Driver.driver_id, Driver.name, Driver.team, func.sum(Race.points).label("total_points"))
+        .join(Race, Driver.driver_id == Race.driver_id)
+        .group_by(Driver.driver_id, Driver.name, Driver.team)
+    )
 
+    if driver_id:
+        query = query.filter(Driver.driver_id == driver_id)
+
+    driver_points = query.order_by(func.sum(Race.points).desc()).all()
+
+    if not driver_points:
+        raise HTTPException(status_code=404, detail="No drivers found with points data")
+
+    return [
+        {
+            "driver_id": dp.driver_id,
+            "name": dp.name,
+            "team": dp.team,
+            "total_points": dp.total_points,
+        }
+        for dp in driver_points
+    ]
+
+def get_drivers_with_multiple_wins(db: Session) -> List[Driver]:
+    query = (
+        db.query(Driver.driver_id, Driver.name, func.count(Race.circuit_id.distinct()).label("num_circuits"),)
+        .join(Race, Driver.driver_id == Race.driver_id)
+        .filter(Race.place == 1)
+        .group_by(Driver.driver_id, Driver.name)
+        .having(func.count(Race.circuit_id.distinct()) > 1)
+        .all())
+    
+    if not query:
+        raise HTTPException(status_code=404, detail="No drivers found with wins at multiple circuits")
+    
+    return [
+        {
+            "driver_id": q.driver_id,
+            "name": q.name,
+            "num_circuits": q.num_circuits,
+        }
+        for q in query
+    ]
 
 '''
 Circuit CRUD
@@ -200,6 +245,40 @@ def get_races_with_filters(db: Session, driver_id: int = None, circuit_id: int =
     if not races:
         raise HTTPException(status_code=404, detail="No races found")
     return races
+
+def get_sorted_circuits(db: Session, sort_by: str) -> List[Circuit]:
+    query = db.query(Circuit)
+
+
+    if sort_by == "length":
+        query = query.order_by(Circuit.length.desc())
+    elif sort_by == "laps":
+        query = query.order_by(Circuit.laps.desc())
+    elif sort_by == "lap_record":
+        query = query.order_by(Circuit.lap_record)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid sort_by parameter. You can only sort by length, laps or lap_record")
+
+    circuits = query.all()
+    if not circuits:
+        raise HTTPException(status_code=404, detail="No circuits found")
+    return circuits
+
+def get_most_popular_circuits(db: Session) -> dict:
+    query = (db.query(Circuit.name, Circuit.location, func.count(Race.circuit_id).label("num_races"),)
+            .join(Race, Circuit.circuit_id == Race.circuit_id)
+            .group_by(Circuit.circuit_id, Circuit.name, Circuit.location)
+            .order_by(func.count(Race.circuit_id).desc())
+            .first())
+    
+    if not query:
+        raise HTTPException(status_code=404, detail="No circuits found")
+    
+    return {
+            "name": query.name,
+            "location": query.location,
+            "num_races": query.num_races,
+            }
 
 '''
 Race CRUD
