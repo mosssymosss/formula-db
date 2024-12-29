@@ -6,18 +6,19 @@ Run this command
 
 You need to have a .env file that has your postgres configurations, i.e.
 
-    POSTGRES_USER={your_username}
-    POSTGRES_PASSWORD={your_password}
-    POSTGRES_DB={your_database_name}
-    POSTGRES_HOST=localhost
-    POSTGRES_PORT=5432
+    POSTGRES_ADMIN_USER={admin_username} // username with privileges to create new users and databases
+    POSTGRES_ADMIN_PASSWORD={admin_username_password}
+    POSTGRES_DB={your_db_name}
+    POSTGRES_HOST={your_host}
+    POSTGRES_PORT={your_port}
+    POSTGRES_CURRENT_USER={your_user} // username that will be using the created database
+    POSTGRES_CURRENT_USER_PASSWORD={your_user_password}
 
-    API_BASE_URL={your_base_url}
+    DATABASE_URL=postgresql://${POSTGRES_CURRENT_USER}:${POSTGRES_CURRENT_USER_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
 
-    DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    API_BASE_URL="http://127.0.0.1:8000"
 
-
-Alembic relies on this last parameters
+Alembic relies on the DATABASE_URL
 
 Run the init.db file to make the database and it's tables
 
