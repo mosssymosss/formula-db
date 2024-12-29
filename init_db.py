@@ -6,25 +6,41 @@ import os
 load_dotenv()
 
 DB_NAME = os.getenv("POSTGRES_DB")
-DB_USER = os.getenv("POSTGRES_USER")
-DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+DB_USER = os.getenv("POSTGRES_CURRENT_USER")
+DB_PASSWORD = os.getenv("POSTGRES_CURRENT_USER_PASSWORD")
 DB_HOST = os.getenv("POSTGRES_HOST")
 DB_PORT = os.getenv("POSTGRES_PORT")
+DB_ADMIN_USER = os.getenv("POSTGRES_ADMIN_USER")
+DB_ADMIN_PASSWORD = os.getenv("POSTGRES_ADMIN_PASSWORD")
 
 def create_database():
     try:
         connection = psycopg2.connect(
             dbname="postgres",
-            user=DB_USER,
-            password=DB_PASSWORD,
+            user=DB_ADMIN_USER,
+            password=DB_ADMIN_PASSWORD,
             host=DB_HOST,
             port=DB_PORT
         )
         connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = connection.cursor()
 
-        cursor.execute(f"CREATE DATABASE {DB_NAME} OWNER {DB_USER};")
-        print(f"Database {DB_NAME} created successfully")
+        cursor.execute(f"SELECT 1 FROM pg_roles WHERE rolname = '{DB_USER}';")
+        user_exists = cursor.fetchone()
+
+        if user_exists:
+            print(f"User {DB_USER} already exists.")
+        else:
+            cursor.execute(f"CREATE USER {DB_USER} WITH PASSWORD '{DB_PASSWORD}';")
+            print(f"User {DB_USER} created successfully.")
+
+        cursor.execute(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}';")
+        db_exists = cursor.fetchone()
+        if db_exists:
+            print(f"Database {DB_NAME} already exists.")
+        else:
+            cursor.execute(f"CREATE DATABASE {DB_NAME} OWNER {DB_USER};")
+            print(f"Database {DB_NAME} created successfully")
 
         cursor.close()
         connection.close()
