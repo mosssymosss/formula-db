@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date
 
+
+
 '''
 Driver Schemas
 '''
@@ -14,6 +16,7 @@ class DriverBase(BaseModel):
     team: str
     #tier: str
     dob: date
+
 
 class DriverCreate(DriverBase):
     pass
@@ -31,6 +34,19 @@ class DriverResponse(DriverBase):
     class Config:
         orm_mode = True
 
+
+class DriverTotalPointsResponse(BaseModel):
+    driver_id: int
+    name: str
+    total_points: int
+    class Config:
+        orm_mode = True
+
+
+class DriverMultipleWinsResponse(BaseModel):
+    driver_id: int
+    name: str
+    num_circuits: int
 
 '''
 Circuit Schemas
@@ -62,6 +78,19 @@ class CircuitResponse(CircuitBase):
         orm_mode = True
 
 
+class CircuitDetail(BaseModel):
+    name: str
+    location: str
+    length: float
+    laps: int
+    lap_record: str
+
+
+class CircuitPopularityResponse(BaseModel):
+    name: str
+    location: str
+    num_races: int
+
 '''
 Race Schemas
 '''
@@ -87,5 +116,10 @@ class RaceUpdate(BaseModel):
 
 
 class RaceResponse(RaceBase):
+    class Config:
+        orm_mode = True
+
+class RaceWithCircuitResponse(RaceBase):
+    circuit: CircuitDetail
     class Config:
         orm_mode = True

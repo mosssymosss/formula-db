@@ -11,17 +11,18 @@ faker = Faker()
 
 API_BASE_URL = os.getenv("API_BASE_URL")
 
-NUM_DRIVERS = 5000
-NUM_CIRCUITS = 5000
-NUM_RACES = 5000
+NUM_DRIVERS = 1500
+NUM_CIRCUITS = 1500
+NUM_RACES = 20000
 
 def generate_drivers(num):
     print(f"Generating {num} drivers...")
+    unique_names = [faker.name() for _ in range(900)]
     for i in range(1, num+1):
         driver = {
             "driver_id": i,
             "number": faker.random_int(min=1, max=99),
-            "name": faker.name(),
+            "name": random.choice([random.choice(unique_names) for _ in range(5000)]),
             "nationality": faker.country(),
             "team": random.choice(["Mercedes", "Red Bull", "Ferrari", "McLaren", "Aston Martin", "Alpine", "VCARB", "Kick Sauber", "Haas", "Williams"]),
             "dob": faker.date_of_birth(minimum_age=18, maximum_age=50).strftime("%Y-%m-%d")
@@ -86,8 +87,8 @@ def generate_races(num, driver_num, circuit_num):
 
 if __name__ == "__main__":
     print("Populating database with random data...")
-    #generate_drivers(NUM_DRIVERS)
-    #generate_circuits(NUM_CIRCUITS)
+    generate_drivers(NUM_DRIVERS)
+    generate_circuits(NUM_CIRCUITS)
     generate_races(NUM_RACES, NUM_DRIVERS, NUM_CIRCUITS)
     print("Database populated successfully")
 
