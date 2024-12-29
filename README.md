@@ -29,10 +29,9 @@ By default driver=5000, circuits=5000, races=50000
 It also takes as an argument which of the tables it should generate, by default all of them are generated
 The races table depend on the drivers and circuits table, make sure they exist when generating only the races table
 
-example of how the code should be run: 
+Run this to see how to use populate_bd_random.py
 
-    python populate_db_random.py --tables drivers cricuits --races 10000 --drivers 5000 --circuits 3000
-
+    python populate_db_random.py --help
 
 
 
