@@ -32,7 +32,7 @@ class DriverUpdate(BaseModel):
 
 class DriverResponse(DriverBase):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class DriverTotalPointsResponse(BaseModel):
@@ -40,7 +40,7 @@ class DriverTotalPointsResponse(BaseModel):
     name: str
     total_points: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class DriverMultipleWinsResponse(BaseModel):
@@ -76,7 +76,7 @@ class CircuitUpdate(BaseModel):
 
 class CircuitResponse(CircuitBase):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class CircuitDetail(BaseModel):
@@ -118,9 +118,9 @@ class RaceUpdate(BaseModel):
 
 class RaceResponse(RaceBase):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RaceWithCircuitResponse(RaceBase):
     circuit: CircuitDetail
     class Config:
-        orm_mode = True
+        from_attributes = True
