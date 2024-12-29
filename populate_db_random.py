@@ -3,7 +3,8 @@ import os
 from dotenv import load_dotenv
 import random
 import requests
-
+import argparse
+import sys
 
 load_dotenv()
 
@@ -11,18 +12,14 @@ faker = Faker()
 
 API_BASE_URL = os.getenv("API_BASE_URL")
 
-NUM_DRIVERS = 4000
-NUM_CIRCUITS = 4000
-NUM_RACES = 50000
-
 def generate_drivers(num):
     print(f"Generating {num} drivers...")
-    unique_names = [faker.name() for _ in range(2000)]
+    unique_names = [faker.name() for _ in range(int(num/5)*3)]
     for i in range(1, num+1):
         driver = {
             "driver_id": i,
             "number": faker.random_int(min=1, max=99),
-            "name": random.choice([random.choice(unique_names) for _ in range(2000)]),
+            "name": random.choice([random.choice(unique_names) for _ in range(int(num/5)*3)]),
             "nationality": faker.country(),
             "team": random.choice(["Mercedes", "Red Bull", "Ferrari", "McLaren", "Aston Martin", "Alpine", "VCARB", "Kick Sauber", "Haas", "Williams"]),
             "dob": faker.date_of_birth(minimum_age=18, maximum_age=50).strftime("%Y-%m-%d")
@@ -91,17 +88,36 @@ def generate_races(num, driver_num, circuit_num):
 
         response = requests.post(f"{API_BASE_URL}/races/", json=race_data)
         if response.status_code == 200:
-            print(q)
-            #print(f"Race with {driver_id} circuit {circuit_id} date {race_date} created successfully")
+            print(f"Race {q} with {driver_id} circuit {circuit_id} date {race_date} created successfully")
         else:
             print(f"Error creating race with {driver_id} circuit {circuit_id} date {race_date}. Status code: {response.status_code}")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Populate database with random data.")
+    parser.add_argument("--drivers", type=int, default=4000, help="Number of drivers to generate")
+    parser.add_argument("--circuits", type=int, default=4000, help="Number of circuits to generate")
+    parser.add_argument("--races", type=int, default=50000, help="Number of races to generate")
+    parser.add_argument(
+        "--tables",
+        type=str,
+        nargs="+",
+        choices=["drivers", "circuits", "races"],
+        default=["drivers", "circuits", "races"],
+        help="Specify which tables to generate. Options: drivers, circuits, races. Default: all tables"
+    )
+
+    args = parser.parse_args()
+
+
     print("Populating database with random data...")
-    generate_drivers(NUM_DRIVERS)
-    generate_circuits(NUM_CIRCUITS)
-    generate_races(NUM_RACES, NUM_DRIVERS, NUM_CIRCUITS)
+    
+    if "drivers" in args.tables:
+        generate_drivers(args.drivers)
+    if "circuits" in args.tables:
+        generate_circuits(args.circuits)
+    if "races" in args.tables:
+        generate_races(args.races, args.drivers, args.circuits)
     print("Database populated successfully")
 
 
