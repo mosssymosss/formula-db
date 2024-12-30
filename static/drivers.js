@@ -331,5 +331,83 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
+
+
+        $('#multiple-wins-button').click(function () {
+            function fetchMostWinsDrivers(page = 1) {
+                $.ajax({
+                    url: `/drivers/multiple_wins/`, // Modify the query parameter as needed
+                    method: 'GET',
+                    success: function (data) {
+                        renderMostWinsDriversTable(data, page);
+                    },
+                    error: function (error) {
+                        console.error('Error filtering drivers:', error);
+                        $('#response-content').html('<p style="color: red;">An error occurred or no drivers matched the filter.</p>');
+                    },
+                });
+            
+            }
+            function renderMostWinsDriversTable(drivers, page) {
+                let tableHtml = `
+                            <table class="ui celled inverted table">
+                                <thead>
+                                    <tr>
+                                        <th>Driver ID</th>
+                                        <th>Name</th>
+                                        <th>Number of Circuits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+        
+                        drivers.forEach(driver => {
+                            tableHtml += `
+                                <tr>
+                                    <td data-label="Driver ID">${driver.driver_id}</td>
+                                    <td data-label="Name">${driver.name}</td>
+                                    <td data-label="Date of Birth">${driver.num_circuits}</td>
+                                </tr>
+                            `;
+                        });
+        
+                        tableHtml += `
+                                </tbody>
+                            </table>
+                        `;
+                        
+                        let paginationHtml = `
+                            <div class="ui pagination inverted menu">
+                                <a class="item" data-page="${page - 1}" ${page === 1 ? 'disabled' : ''}>Previous</a>
+                        `;
+        
+                        const totalPages = 1;
+                        const startPage = Math.max(1, page - 2);
+                        const endPage = Math.min(totalPages, page + 2);
+        
+                        for (let i = startPage; i <= endPage; i++) {
+                            paginationHtml += `
+                                <a class="item ${i === page ? 'active' : ''}" data-page="${i}">${i}</a>
+                            `;
+                        }
+        
+                        paginationHtml += `
+                                <a class="item" data-page="${page + 1}" ${page === totalPages ? 'disabled' : ''}>Next</a>
+                            </div>
+                        `;
+        
+                        $('#response-content').html(tableHtml + paginationHtml);
+        
+                        $('.ui.pagination.menu .item').not('[disabled]').click(function () {
+                            const newPage = $(this).data('page');
+                            fetchFilteredDrivers(newPage);
+                        });
+                
+            }
+
+            fetchMostWinsDrivers(currentPage);
+        });
+
+
     });
 });
