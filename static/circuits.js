@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('circuits-content').style.display = 'block';
         document.getElementById('races-content').style.display = 'none';
         document.getElementById('response-content').innerHTML = '';
+        
+        document.querySelectorAll('.item').forEach(function(item) {
+            item.classList.remove('active');
+        });
+        
+        this.classList.add('active');
     });
 
     // All drivers button

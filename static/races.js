@@ -6,8 +6,14 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('circuits-content').style.display = 'none';
         document.getElementById('races-content').style.display = 'block';
         document.getElementById('response-content').innerHTML = '';
-    });
+    
 
+        document.querySelectorAll('.item').forEach(function(item) {
+            item.classList.remove('active');
+        });
+
+        this.classList.add('active');
+    });
     // All races button
     $(document).ready(function () {
         let currentPage = 1;
