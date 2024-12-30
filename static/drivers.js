@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentPage = 1;
         const pageSize = 10; 
         let num_of_drivers = 0;
-        let num_of_filtered_drivers = 0;
         
         function fetchDrivers(page = 1) {
             const url = `/drivers/?page=${page}&page_size=${pageSize}`;
