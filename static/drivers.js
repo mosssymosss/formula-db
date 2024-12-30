@@ -278,5 +278,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
             fetchFilteredDrivers(currentPage);
         });
+
+        $('#total-points-button').click(function () {
+            $('#driver-id-modal-2').modal('show');
+        });
+
+        $('#search-driver-button-2').click(function () {
+            let driverId = $('#driver-id-input-2').val(); 
+
+            const params = new URLSearchParams();
+            if (driverId) params.append('driver_id', driverId)
+                else {driverId = -1;}
+            
+            $.ajax({
+                url: `/drivers/total_points/?${params.toString()}`,
+                method: 'GET',
+                success: function (driver) {
+                    console.log(driver);
+                    let driverHtml = `
+                        <table class="ui celled inverted table">
+                            <thead>
+                                <tr>
+                                    <th>Driver ID</th>
+                                    <th>Name</th>
+                                    <th>Total Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            `;
+                            driver.forEach(d => {
+                                driverHtml += `
+                                <tr>
+                                
+                                    <td>${d.driver_id}</td>
+                                    <td>${d.name}</td>
+                                    <td>${d.total_points}</td>
+                                </tr> `;
+                            });
+                            driverHtml += `
+                                </tbody>
+                            </table>
+                        `;
+
+                    $('#response-content').html(driverHtml); 
+                    $('#driver-id-modal').modal('hide'); 
+                },
+                error: function (error) {
+                    console.error('Error fetching driver:', error);
+                    $('#response-content').html('<p style="color: red;">Driver not found or an error occurred.</p>');
+                    $('#driver-id-modal-2').modal('hide'); 
+                },
+            });
+        });
+        
     });
 });

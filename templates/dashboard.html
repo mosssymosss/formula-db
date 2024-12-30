@@ -20,31 +20,31 @@
         <br>
         <div class="ui equal width grid" style="text-align: center;" id="buttons-container">
             <div class="ui grid">
-                <div class="five wide column">
+                <div class="four wide column">
                     <button class="ui inverted blue basic button" id="all-drivers-button">All Drivers</button>
                 </div>
-                <div class="six wide column">
+                <div class="four wide column">
                     <button class="ui inverted blue basic button" id="driver-by-id-button">Driver by ID</button>
                 </div>
-                <div class="five wide column">
+                <div class="four wide column">
                     <button class="ui inverted blue basic button" id="filter-drivers-button">Filter Drivers</button>
                 </div>
-                <div class="five wide column">
+                <!-- <div class="five wide column">
                     <button class="ui inverted blue basic button" id="race-results-button">Race results for Driver</button>
-                </div>
-                <div class="six wide column">
-                    <button class="ui inverted blue basic button" id="total-points-button">Total Points for Driver</button>
-                </div>
-                <div class="five wide column">
+                </div> -->
+                <div class="four wide column">
                     <button class="ui inverted blue basic button" id="multiple-wins-button">Drivers with multiple wins</button>
                 </div>
-                <div class="five wide column">
+                <div class="four wide column">
+                    <button class="ui inverted blue basic button" id="total-points-button">Total Points for Driver</button>
+                </div>
+                <div class="four wide column">
                     <button class="ui inverted red basic button" id="delete-driver-button">Delete Driver by ID</button>
                 </div>
-                <div class="six wide column">
+                <div class="four wide column">
                     <button class="ui inverted green basic button" id="create-driver-button">Create Driver</button>
                 </div>
-                <div class="five wide column">
+                <div class="four wide column">
                     <button class="ui inverted yellow basic button" id="update-driver-button">Update Existing Drivers</button>
                 </div>
             </div>
@@ -155,6 +155,28 @@
                 Cancel
             </div>
             <div class="ui green ok inverted button" id="search-driver-button">
+                <i class="checkmark icon"></i>
+                Search
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="driver-id-modal-2">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Search for a Driver Total Points by ID (leave field empty to search all)
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="driver-id-input-2" placeholder="Enter Driver ID...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-driver-button-2">
                 <i class="checkmark icon"></i>
                 Search
             </div>

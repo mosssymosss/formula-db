@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends, Query, Request
 from sqlalchemy.orm import Session
 from app import schemas
 from app.database import Base, engine, get_db
-from typing import List
+from typing import List, Optional
 import app.crud as crud
 from datetime import date
 from fastapi.templating import Jinja2Templates
@@ -131,25 +131,25 @@ def get_drivers_filter(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
-@app.get("/drivers/{driver_id}/race_results", response_model=List[schemas.RaceWithCircuitResponse], tags=["Drivers"])
-def get_driver_races(
-    driver_id: int, 
-    db: Session = Depends(get_db), 
-    page_size: int = Query(10, gt=0, description="Page size (must be > 0)"), 
-    page: int = Query(1, gt=0, description="Page number (must be > 0)")
-    ):
-    # Get all races for a given driver, including details of the circuit
-    try:
-        return crud.get_drivers_races(db, driver_id, page_size, (page - 1) * page_size)
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+# @app.get("/drivers/{driver_id}/race_results", response_model=List[schemas.RaceWithCircuitResponse], tags=["Drivers"])
+# def get_driver_races(
+#     driver_id: int, 
+#     db: Session = Depends(get_db), 
+#     page_size: int = Query(10, gt=0, description="Page size (must be > 0)"), 
+#     page: int = Query(1, gt=0, description="Page number (must be > 0)")
+#     ):
+#     # Get all races for a given driver, including details of the circuit
+#     try:
+#         return crud.get_drivers_races(db, driver_id, page_size, (page - 1) * page_size)
+#     except HTTPException as e:
+#         raise e
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 @app.get("/drivers/total_points/", response_model=List[schemas.DriverTotalPointsResponse], tags=["Drivers"])
 def get_drivers_total_points(
     db: Session = Depends(get_db), 
-    driver_id: int = None, 
+    driver_id: Optional[int] = None, 
     page_size: int = Query(10, gt=0, description="Page size (must be > 0)"), 
     page: int = Query(1, gt=0, description="Page number (must be > 0)")
     ):
