@@ -285,6 +285,10 @@ def search_info(db: Session, search: str, limit: int = 10, offset: int = 0) -> L
         raise HTTPException(status_code=404, detail="No circuits found")
     return circuits
 
+def get_num_circuits(db: Session) -> dict:
+    num_circuits = db.query(Circuit).count()
+    return {"num_circuits": num_circuits}
+
 '''
 
 Race CRUD
@@ -373,3 +377,7 @@ def increment_fastest_lap_points(db: Session) -> dict:
 
     db.commit()
     return {"detail": "Fastest lap points have been incremented"}
+
+def get_num_races(db: Session) -> dict:
+    num_races = db.query(Race).count()
+    return {"num_races": num_races}

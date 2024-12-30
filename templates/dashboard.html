@@ -56,31 +56,31 @@
         <br>
         <div class="ui grid" style="text-align: center;">
             <div class="five wide column">
-                <button class="ui inverted blue basic button">All Circuits</button>
+                <button class="ui inverted blue basic button" id="all-circuits-button">All Circuits</button>
             </div>
             <div class="six wide column">
-                <button class="ui inverted blue basic button">Circuits by ID</button>
+                <button class="ui inverted blue basic button" id="circuit-by-id-button">Circuits by ID</button>
             </div>
             <div class="five wide column">
-                <button class="ui inverted blue basic button">Filter Drivers</button>
+                <button class="ui inverted blue basic button" id="filter-circuits-button">Filter Circuits</button>
             </div>
             <div class="five wide column">
-                <button class="ui inverted blue basic button">Sort Circuits</button>
+                <button class="ui inverted blue basic button" id="sort-circuits-button">Sort Circuits</button>
             </div>
             <div class="six wide column">
-                <button class="ui inverted blue basic button">Most Popular Circuit</button>
+                <button class="ui inverted blue basic button" id="most-popular-circuit-button">Most Popular Circuit</button>
             </div>
             <div class="five wide column">
-                <button class="ui inverted red basic button">Search in Circuits</button>
+                <button class="ui inverted red basic button" id="search-circuits-button">Search in Circuits</button>
             </div>
             <div class="five wide column">
-                <button class="ui inverted blue basic button">Delete Circuit by ID</button>
+                <button class="ui inverted blue basic button" id="delete-circuit-button">Delete Circuit by ID</button>
             </div>
             <div class="six wide column">
-                <button class="ui inverted green basic button">Create Circuit</button>
+                <button class="ui inverted green basic button" id="create-circuit-button">Create Circuit</button>
             </div>
             <div class="five wide column">
-                <button class="ui inverted yellow basic button">Update Existing Circuit</button>
+                <button class="ui inverted yellow basic button" id="update-circuit-button">Update Existing Circuit</button>
             </div>
         </div>
     </div>
@@ -90,25 +90,25 @@
         <br>
         <div class="ui grid" style="text-align: center;">
             <div class="five wide column">
-                <button class="ui inverted blue basic button">All Races</button>
+                <button class="ui inverted blue basic button" id="all-races-button">All Races</button>
             </div>
             <div class="six wide column">
-                <button class="ui inverted blue basic button">Races by ID</button>
+                <button class="ui inverted blue basic button" id="race-by-id-button">Races by ID</button>
             </div>
             <div class="five wide column">
-                <button class="ui inverted blue basic button">Filter Races</button>
+                <button class="ui inverted blue basic button" id="filter-races-button">Filter Races</button>
             </div>
             <div class="five wide column">
-                <button class="ui inverted yellow basic button">Increment points for Race</button>
+                <button class="ui inverted yellow basic button" id="increment-points-button">Increment points for Race</button>
             </div>
             <div class="six wide column">
-                <button class="ui inverted green basic button">Create Race</button>
+                <button class="ui inverted green basic button" id="create-race-button">Create Race</button>
             </div>
             <div class="five wide column">
-                <button class="ui inverted yellow basic button">Update Existing Race</button>
+                <button class="ui inverted yellow basic button" id="update-race-button">Update Existing Race</button>
             </div>
             <div class="sixteen wide column">
-                <button class="ui inverted red basic button">Delete Race by ID</button>
+                <button class="ui inverted red basic button" id="delete-race-button">Delete Race by ID</button>
             </div>
         </div>
     </div>
@@ -117,138 +117,124 @@
     <br><br><br>
     <button class="ui red button float-right;" id="reset-database-button">Reset Database</button>
     
-    <!-- <script>
-        document.getElementById('drivers-menu').addEventListener('click', function() {
-            document.getElementById('drivers-content').style.display = 'block';
-            document.getElementById('circuits-content').style.display = 'none';
-            document.getElementById('races-content').style.display = 'none';
-            document.getElementById('response-content').innerHTML = '';
-            fetchDriversData();
-        });
+    <!-- Modals -->
 
-        document.getElementById('circuits-menu').addEventListener('click', function() {
-            document.getElementById('drivers-content').style.display = 'none';
-            document.getElementById('circuits-content').style.display = 'block';
-            document.getElementById('races-content').style.display = 'none';
-            document.getElementById('response-content').innerHTML = '';
-            fetchCircuitsData();
-        });
+    <div class="ui basic modal" id="driver-id-modal">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Search for a Driver by ID
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="driver-id-input" placeholder="Enter Driver ID...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-driver-button">
+                <i class="checkmark icon"></i>
+                Search
+            </div>
+        </div>
+    </div>
 
-        document.getElementById('races-menu').addEventListener('click', function() {
-            document.getElementById('drivers-content').style.display = 'none';
-            document.getElementById('circuits-content').style.display = 'none';
-            document.getElementById('races-content').style.display = 'block';
-            document.getElementById('response-content').innerHTML = '';
-            fetchRacesData();
-        });
+    <div class="ui basic modal" id="circuit-id-modal">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Search for a Driver by ID
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="circuit-id-input" placeholder="Enter Circuit ID...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-circuit-button">
+                <i class="checkmark icon"></i>
+                Search
+            </div>
+        </div>
+    </div>
 
-        $(document).ready(function () {
-            let currentPage = 1;
-            const pageSize = 10; // Set the number of rows per page
-            let num_of_drivers = 0;
-            // Function to fetch and display drivers in a table
-            function fetchDrivers(page = 1) {
-                const url = `/drivers/?page=${page}&page_size=${pageSize}`;
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function (data) {
-                        renderDriversTable(data, page);
-                    },
-                    error: function (error) {
-                        console.error('Error fetching drivers:', error);
-                        $('#response-content').html('<p style="color: red;">An error occurred while fetching drivers.</p>');
-                    },
-                });
-            }
-            function fetchNumberOfDrivers() {
-                return $.ajax({
-                    url: '/drivers/driver_count/',
-                    method: 'GET',
-                }).then(function (data) {
-                    num_of_drivers = data.num_drivers; // Save the returned value to the variable
-                    return num_of_drivers; // Resolve the promise with num_drivers
-                }).catch(function (error) {
-                    console.error('Error fetching number of drivers:', error);
-                    throw error; // Re-throw the error for further handling
-                });
-            }
-            fetchNumberOfDrivers().then(function(num_of_drivers) {
-                    console.log('Number of drivers:', num_of_drivers);
-                });
-            // Function to render the drivers table
-            function renderDriversTable(drivers, page) {
-                // Generate the table
-                let tableHtml = `
-                    <table class="ui celled inverted table">
-                        <thead>
-                            <tr>
-                                <th>Driver ID</th>
-                                <th>Number</th>
-                                <th>Name</th>
-                                <th>Nationality</th>
-                                <th>Team</th>
-                                <th>Date of Birth</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
+    <div class="ui basic modal" id="race-id-modal">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Search for a Driver by ID
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="race-driver-id-input" placeholder="Enter Driver ID...">
+            </div>
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="race-circuit-id-input" placeholder="Enter Circuit ID...">
+            </div>
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="date" id="race-date-input" placeholder="Enter Race Date...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-race-button">
+                <i class="checkmark icon"></i>
+                Search
+            </div>
+        </div>
+    </div>
 
-                drivers.forEach(driver => {
-                    tableHtml += `
-                        <tr>
-                            <td data-label="Driver ID">${driver.driver_id}</td>
-                            <td data-label="Number">${driver.number}</td>
-                            <td data-label="Name">${driver.name}</td>
-                            <td data-label="Nationality">${driver.nationality}</td>
-                            <td data-label="Team">${driver.team}</td>
-                            <td data-label="Date of Birth">${driver.dob}</td>
-                        </tr>
-                    `;
-                });
-
-                tableHtml += `
-                        </tbody>
-                    </table>
-                `;
-
-                // Generate the pagination
-                let paginationHtml = `
-                    <div class="ui pagination inverted menu">
-                        <a class="item" data-page="${page - 1}" ${page === 1 ? 'disabled' : ''}>Previous</a>
-                `;
-
-                
-                const totalPages = Math.ceil(num_of_drivers / pageSize);
-                const startPage = Math.max(1, page - 2);
-                const endPage = Math.min(totalPages, page + 2);
-
-                for (let i = startPage; i <= endPage; i++) {
-                    paginationHtml += `
-                        <a class="item ${i === page ? 'active' : ''}" data-page="${i}">${i}</a>
-                    `;
-                }
-
-                paginationHtml += `
-                        <a class="item" data-page="${page + 1}" ${page === totalPages ? 'disabled' : ''}>Next</a>
-                    </div>
-                `;
-
-                // Update the response content
-                $('#response-content').html(tableHtml + paginationHtml);
-
-                // Attach click events to pagination buttons
-                $('.ui.pagination.menu .item').not('[disabled]').click(function () {
-                    const newPage = $(this).data('page');
-                    fetchDrivers(newPage);
-                });
-            }
-
-            // Attach event listener for the "All Drivers" button
-            $('#all-drivers-button').click(function () {
-                
-                fetchDrivers(currentPage);
-            });
-        });
-    </script> -->
+    <div class="ui basic modal" id="filter-drivers-modal">
+        <div class="ui icon header">
+            <i class="filter icon"></i>
+            Filter Drivers
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Nationality</label>
+                    <input type="text" id="filter-drivers-input" placeholder="Enter nationality...">
+                </div>
+                <div class="field">
+                    <label>Team</label>
+                    <input type="text" id="filter-team-input" placeholder="Enter team...">
+                </div>
+                <div class="field">
+                    <label>Number</label>
+                    <input type="text" id="filter-number-input" placeholder="Enter number...">
+                </div>
+                <div class="field">
+                    <label>Circuit ID</label>
+                    <input type="text" id="filter-circuit-id-input" placeholder="Enter circuit ID...">
+                </div>
+                <div class="field">
+                    <label>Date of Birth</label>
+                    <input type="date" id="filter-dob-input" placeholder="Enter date of birth...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="filter-drivers-search-button">
+                <i class="checkmark icon"></i>
+                Search
+            </div>
+        </div>
+    </div>
+    
+    
 {% endblock %}

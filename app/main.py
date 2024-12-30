@@ -302,7 +302,16 @@ def search_info(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
-
+@app.get("/circuits/circuit_count/", response_model=dict, tags=["Circuits"])
+def get_num_circuits(db: Session = Depends(get_db)):
+    # Get the number of circuits
+    try:
+        return crud.get_num_circuits(db)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+    
 '''
 Race Endpoints
 '''
@@ -392,3 +401,13 @@ def increment_fastest_lap_points(db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
+@app.get("/races/race_count/", response_model=dict, tags=["Races"])
+def get_num_races(db: Session = Depends(get_db)):
+    # Get the number of circuits
+    try:
+        return crud.get_num_races(db)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+    
