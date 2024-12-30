@@ -164,7 +164,7 @@
     <div class="ui basic modal" id="circuit-id-modal">
         <div class="ui icon header">
             <i class="search icon"></i>
-            Search for a Driver by ID
+            Search for a Circuit by ID
         </div>
         <div class="content">
             <div class="ui input">
@@ -186,7 +186,7 @@
     <div class="ui basic modal" id="race-id-modal">
         <div class="ui icon header">
             <i class="search icon"></i>
-            Search for a Driver by ID
+            Search for a Race by ID
         </div>
         <div class="content">
             <div class="ui input">
@@ -256,10 +256,51 @@
         </div>
     </div>
 
+    <div class="ui basic modal" id="filter-circuits-modal">
+        <div class="ui icon header">
+            <i class="filter icon"></i>
+            Filter Circuits
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Location</label>
+                    <input type="text" id="filter-location-input" placeholder="Enter loaction...">
+                </div>
+                <div class="field">
+                    <label>Minimum Length</label>
+                    <input type="text" id="filter-minlen-input" placeholder="Enter minimum length...">
+                </div>
+                <div class="field">
+                    <label>Maximum Length</label>
+                    <input type="text" id="filter-maxlen-input" placeholder="Enter maximum length...">
+                </div>
+                <div class="field">
+                    <label>Minimum Laps</label>
+                    <input type="text" id="filter-minlap-input" placeholder="Enter minimum laps...">
+                </div>
+                <div class="field">
+                    <label>Maximum Laps</label>
+                    <input type="date" id="filter-maxlap-input" placeholder="Enter maximum laps...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="filter-circuits-search-button">
+                <i class="checkmark icon"></i>
+                Search
+            </div>
+        </div>
+    </div>
+
     <div class="ui basic modal" id="filter-races-modal">
         <div class="ui icon header">
             <i class="filter icon"></i>
-            Filter Drivers
+            Filter Races
         </div>
         <div class="content">
             <div class="ui form">
