@@ -169,6 +169,10 @@ def get_drivers_with_multiple_wins(db: Session, limit: int = 10, offset: int = 0
         for q in query
     ]
 
+def get_num_drivers(db: Session) -> dict:
+    num_drivers = db.query(Driver).count()
+    return {"num_drivers": num_drivers}
+
 '''
 Circuit CRUD
 '''

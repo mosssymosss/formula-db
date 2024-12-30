@@ -1,14 +1,50 @@
-from fastapi import FastAPI, HTTPException, Depends, Query
+from fastapi import FastAPI, HTTPException, Depends, Query, Request
 from sqlalchemy.orm import Session
 from app import schemas
 from app.database import Base, engine, get_db
 from typing import List
 import app.crud as crud
 from datetime import date
+from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Replace "*" with specific domains in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+templates = Jinja2Templates(directory="templates")
+
+'''
+UI
+'''
+
+@app.get("/", tags=["UI"])
+def dashboard(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
+
+# @app.get("/drivers-page/", tags=["UI"])
+# def drivers_page(request: Request):
+#     return templates.TemplateResponse("drivers.html", {"request": request})
+
+# @app.get("/circuits-page/", tags=["UI"])
+# def circuits_page(request: Request):
+#     return templates.TemplateResponse("circuits.html", {"request": request})
+
+# @app.get("/races-page/", tags=["UI"])
+# def races_page(request: Request):
+#     return templates.TemplateResponse("races.html", {"request": request})
+
 
 '''
 Utility Endpoints
@@ -139,6 +175,16 @@ def get_drivers_with_multiple_wins(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
+@app.get("/drivers/driver_count/", response_model=dict, tags=["Drivers"])
+def get_num_drivers(db: Session = Depends(get_db)):
+    # Get the number of drivers
+    try:
+        return crud.get_num_drivers(db)
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+    
 '''
 Circuit Endpoints
 '''

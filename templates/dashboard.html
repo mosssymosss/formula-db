@@ -1,0 +1,254 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    
+    <h1 style="text-align: center; color: #ffffff;">F1DB</h1>
+    <h2 style="color: #ffffff;">Dashboard</h2>
+    <p style="color: #ffffff;">Click on a button to get that component's functionality</p>
+    <div class="ui inverted three item menu">
+        <a class="red item" id="drivers-menu">Drivers</a>
+        <a class="red item" id="circuits-menu">Circuits</a>
+        <a class="red item" id="races-menu">Races</a>
+    </div>
+    <div id="content"></div>
+    <br>
+    
+
+    <div id="drivers-content" style="display: none; color: #ffffff;">
+        <h2 style="color: #ffffff;">Drivers</h2>
+        <p style="color: #ffffff;">Here you can find all the drivers functionality.</p>
+        <br>
+        <div class="ui equal width grid" style="text-align: center;" id="buttons-container">
+            <div class="ui grid">
+                <div class="five wide column">
+                    <button class="ui inverted blue basic button" id="all-drivers-button">All Drivers</button>
+                </div>
+                <div class="six wide column">
+                    <button class="ui inverted blue basic button" id="driver-by-id-button">Driver by ID</button>
+                </div>
+                <div class="five wide column">
+                    <button class="ui inverted blue basic button" id="filter-drivers-button">Filter Drivers</button>
+                </div>
+                <div class="five wide column">
+                    <button class="ui inverted blue basic button" id="race-results-button">Race results for Driver</button>
+                </div>
+                <div class="six wide column">
+                    <button class="ui inverted blue basic button" id="total-points-button">Total Points for Driver</button>
+                </div>
+                <div class="five wide column">
+                    <button class="ui inverted blue basic button" id="multiple-wins-button">Drivers with multiple wins</button>
+                </div>
+                <div class="five wide column">
+                    <button class="ui inverted red basic button" id="delete-driver-button">Delete Driver by ID</button>
+                </div>
+                <div class="six wide column">
+                    <button class="ui inverted green basic button" id="create-driver-button">Create Driver</button>
+                </div>
+                <div class="five wide column">
+                    <button class="ui inverted yellow basic button" id="update-driver-button">Update Existing Drivers</button>
+                </div>
+            </div>
+        </div>
+    </div>  
+    <div id="circuits-content" style="display: none; color: #ffffff"> 
+        <h2 style="color: #ffffff;">Circuits</h2>
+        <p style="color: #ffffff;">Here you can find all the circuits functionality.</p>
+        <br>
+        <div class="ui grid" style="text-align: center;">
+            <div class="five wide column">
+                <button class="ui inverted blue basic button">All Circuits</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted blue basic button">Circuits by ID</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted blue basic button">Filter Drivers</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted blue basic button">Sort Circuits</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted blue basic button">Most Popular Circuit</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted red basic button">Search in Circuits</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted blue basic button">Delete Circuit by ID</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted green basic button">Create Circuit</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted yellow basic button">Update Existing Circuit</button>
+            </div>
+        </div>
+    </div>
+    <div id="races-content" style="display: none; color: #ffffff">
+        <h2 style="color: #ffffff;">Races</h2>
+        <p style="color: #ffffff;">Here you can find all the races functionality.</p>
+        <br>
+        <div class="ui grid" style="text-align: center;">
+            <div class="five wide column">
+                <button class="ui inverted blue basic button">All Races</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted blue basic button">Races by ID</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted blue basic button">Filter Races</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted yellow basic button">Increment points for Race</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted green basic button">Create Race</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted yellow basic button">Update Existing Race</button>
+            </div>
+            <div class="sixteen wide column">
+                <button class="ui inverted red basic button">Delete Race by ID</button>
+            </div>
+        </div>
+    </div>
+    <br><br><br>
+    <div id="response-content" style="color: #ffffff;"></div>
+    <br><br><br>
+    <button class="ui red button float-right;" id="reset-database-button">Reset Database</button>
+    
+    <!-- <script>
+        document.getElementById('drivers-menu').addEventListener('click', function() {
+            document.getElementById('drivers-content').style.display = 'block';
+            document.getElementById('circuits-content').style.display = 'none';
+            document.getElementById('races-content').style.display = 'none';
+            document.getElementById('response-content').innerHTML = '';
+            fetchDriversData();
+        });
+
+        document.getElementById('circuits-menu').addEventListener('click', function() {
+            document.getElementById('drivers-content').style.display = 'none';
+            document.getElementById('circuits-content').style.display = 'block';
+            document.getElementById('races-content').style.display = 'none';
+            document.getElementById('response-content').innerHTML = '';
+            fetchCircuitsData();
+        });
+
+        document.getElementById('races-menu').addEventListener('click', function() {
+            document.getElementById('drivers-content').style.display = 'none';
+            document.getElementById('circuits-content').style.display = 'none';
+            document.getElementById('races-content').style.display = 'block';
+            document.getElementById('response-content').innerHTML = '';
+            fetchRacesData();
+        });
+
+        $(document).ready(function () {
+            let currentPage = 1;
+            const pageSize = 10; // Set the number of rows per page
+            let num_of_drivers = 0;
+            // Function to fetch and display drivers in a table
+            function fetchDrivers(page = 1) {
+                const url = `/drivers/?page=${page}&page_size=${pageSize}`;
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function (data) {
+                        renderDriversTable(data, page);
+                    },
+                    error: function (error) {
+                        console.error('Error fetching drivers:', error);
+                        $('#response-content').html('<p style="color: red;">An error occurred while fetching drivers.</p>');
+                    },
+                });
+            }
+            function fetchNumberOfDrivers() {
+                return $.ajax({
+                    url: '/drivers/driver_count/',
+                    method: 'GET',
+                }).then(function (data) {
+                    num_of_drivers = data.num_drivers; // Save the returned value to the variable
+                    return num_of_drivers; // Resolve the promise with num_drivers
+                }).catch(function (error) {
+                    console.error('Error fetching number of drivers:', error);
+                    throw error; // Re-throw the error for further handling
+                });
+            }
+            fetchNumberOfDrivers().then(function(num_of_drivers) {
+                    console.log('Number of drivers:', num_of_drivers);
+                });
+            // Function to render the drivers table
+            function renderDriversTable(drivers, page) {
+                // Generate the table
+                let tableHtml = `
+                    <table class="ui celled inverted table">
+                        <thead>
+                            <tr>
+                                <th>Driver ID</th>
+                                <th>Number</th>
+                                <th>Name</th>
+                                <th>Nationality</th>
+                                <th>Team</th>
+                                <th>Date of Birth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                drivers.forEach(driver => {
+                    tableHtml += `
+                        <tr>
+                            <td data-label="Driver ID">${driver.driver_id}</td>
+                            <td data-label="Number">${driver.number}</td>
+                            <td data-label="Name">${driver.name}</td>
+                            <td data-label="Nationality">${driver.nationality}</td>
+                            <td data-label="Team">${driver.team}</td>
+                            <td data-label="Date of Birth">${driver.dob}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHtml += `
+                        </tbody>
+                    </table>
+                `;
+
+                // Generate the pagination
+                let paginationHtml = `
+                    <div class="ui pagination inverted menu">
+                        <a class="item" data-page="${page - 1}" ${page === 1 ? 'disabled' : ''}>Previous</a>
+                `;
+
+                
+                const totalPages = Math.ceil(num_of_drivers / pageSize);
+                const startPage = Math.max(1, page - 2);
+                const endPage = Math.min(totalPages, page + 2);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    paginationHtml += `
+                        <a class="item ${i === page ? 'active' : ''}" data-page="${i}">${i}</a>
+                    `;
+                }
+
+                paginationHtml += `
+                        <a class="item" data-page="${page + 1}" ${page === totalPages ? 'disabled' : ''}>Next</a>
+                    </div>
+                `;
+
+                // Update the response content
+                $('#response-content').html(tableHtml + paginationHtml);
+
+                // Attach click events to pagination buttons
+                $('.ui.pagination.menu .item').not('[disabled]').click(function () {
+                    const newPage = $(this).data('page');
+                    fetchDrivers(newPage);
+                });
+            }
+
+            // Attach event listener for the "All Drivers" button
+            $('#all-drivers-button').click(function () {
+                
+                fetchDrivers(currentPage);
+            });
+        });
+    </script> -->
+{% endblock %}
