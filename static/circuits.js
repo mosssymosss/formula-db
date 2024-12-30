@@ -188,5 +188,125 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+        // Filter Circuits button
+        $('#filter-circuits-button').click(function () {
+            $('#filter-circuits-modal').modal('show');
+        });
+
+
+        $('#filter-circuits-search-button').click(function () {
+            const location = $('#filter-location-input').val(); 
+            const minlen = $('#filter-minlen-input').val();
+            const maxlen = $('#filter-maxlen-input').val();
+            const minlap = $('#filter-minlap-input').val();
+            const maxlap = $('#filter-maxlap-input').val();
+
+            if (!location && !minlen && !maxlen && !minlap && !maxlap) {
+                alert('Please enter at least one correct filter value.');
+                return;
+            }
+
+            function fetchFilteredCircuits(page = 1) {
+                const params = new URLSearchParams();
+                if (minlen) params.append('minlength', minlen);
+                if (location) params.append('location', location);
+                if (maxlen) params.append('maxlength', maxlen);
+                if (minlap) params.append('minlaps', minlap);
+                if (maxlap) params.append('maxlaps', maxlap);
+                params.append('page', page);
+                params.append('page_size', 100000);
+
+                $.ajax({
+                    url: `/circuits/filters/?${params.toString()}`, // Modify the query parameter as needed
+                    method: 'GET',
+                    success: function (data) {
+                        renderFilteredCircuitsTable(data, page);
+                    },
+                    error: function (error) {
+                        console.error('Error filtering circuits:', error);
+                        $('#response-content').html('<p style="color: red;">An error occurred or no circuits matched the filter.</p>');
+                        $('#filter-circuits-modal').modal('hide'); // Close the modal
+                    },
+                });
+            }
+
+            function renderFilteredCircuitsTable(circuits, page) {
+                
+                let tableHtml = `
+                    <table class="ui celled inverted table">
+                            <thead>
+                                <tr>
+                                    <th>Circuit ID</th>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Length (km)</th>
+                                    <th>Laps</th>
+                                    <th>Lap Record</th>
+                                    <th>Description</th>
+                                    <th>Created By</th>
+                                    <th>Created At</th>
+                                    <th>Active</th>
+                                    <th>Events Hosted</th>
+                                    <th>Average Attendance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                circuits.forEach(circuit => {
+                    tableHtml += `
+                                <tr>
+                                    <td data-label="Circuit ID">${circuit.circuit_id}</td>
+                                    <td data-label="Name">${circuit.name}</td>
+                                    <td data-label="Location">${circuit.location}</td>
+                                    <td data-label="Length (km)">${circuit.length_km}</td>
+                                    <td data-label="Laps">${circuit.laps}</td>
+                                    <td data-label="Lap Record">${circuit.lap_record}</td>
+                                    <td data-label="Description">${circuit.info.description}</td>
+                                    <td data-label="Created By">${circuit.info.created_by}</td>
+                                    <td data-label="Created At">${circuit.info.created_at}</td>
+                                    <td data-label="Active">${circuit.info.is_active}</td>
+                                    <td data-label="Events Hosted">${circuit.info.events_hosted}</td>
+                                    <td data-label="Average Attendance">${circuit.info.average_attendance}</td>
+                                </tr>
+                    `;
+                });
+
+                tableHtml += `
+                        </tbody>
+                    </table>
+                `;
+
+                let paginationHtml = `
+                    <div class="ui pagination inverted menu">
+                        <a class="item" data-page="${page - 1}" ${page === 1 ? 'disabled' : ''}>Previous</a>
+                `;
+
+                const totalPages = 1;
+                const startPage = Math.max(1, page - 2);
+                const endPage = Math.min(totalPages, page + 2);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    paginationHtml += `
+                        <a class="item ${i === page ? 'active' : ''}" data-page="${i}">${i}</a>
+                    `;
+                }
+
+                paginationHtml += `
+                        <a class="item" data-page="${page + 1}" ${page === totalPages ? 'disabled' : ''}>Next</a>
+                    </div>
+                `;
+
+                $('#response-content').html(tableHtml + paginationHtml);
+
+                $('.ui.pagination.menu .item').not('[disabled]').click(function () {
+                    const newPage = $(this).data('page');
+                    fetchFilteredCircuits(newPage);
+                });
+            }
+
+            fetchFilteredCircuits(currentPage);
+        });
+
     });
 });

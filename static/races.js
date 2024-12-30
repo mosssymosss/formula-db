@@ -176,5 +176,121 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+
+        // Filter Races button
+        $('#filter-races-button').click(function () {
+            $('#filter-races-modal').modal('show');
+        });
+
+
+        $('#filter-races-search-button').click(function () {
+            const driverID = $('#filter-races-driver-id-input').val(); 
+            const circuitID = $('#filter-races-circuit-id-input').val();
+            const startDate = $('#filter-start-date-input').val();
+            const endDate = $('#filter-end-date-input').val();
+            const minPoints = $('#filter-min-points-input').val();
+            const maxPoints = $('#filter-max-points-input').val();
+            const fastestLap = $('#filter-fastest-lap-input').val();
+
+
+            if (!driverID && !circuitID && !startDate && !endDate && !minPoints && !maxPoints && !fastestLap) {
+                alert('Please enter at least one correct filter value.');
+                return;
+            }
+
+            function fetchFilteredRaces(page = 1) {
+                const params = new URLSearchParams();
+                if (circuitID) params.append('minlength', circuitID);
+                if (driverID) params.append('location', driverID);
+                if (startDate) params.append('maxlength', startDate);
+                if (endDate) params.append('minlaps', endDate);
+                if (minPoints) params.append('maxlaps', minPoints);
+                if (maxPoints) params.append('minlaps', maxPoints);
+                if (fastestLap) params.append('fastest_lap', fastestLap);
+                params.append('page', page);
+                params.append('page_size', 100000);
+
+                $.ajax({
+                    url: `/races/filters/?${params.toString()}`, // Modify the query parameter as needed
+                    method: 'GET',
+                    success: function (data) {
+                        renderFilteredRacesTable(data, page);
+                    },
+                    error: function (error) {
+                        console.error('Error filtering races:', error);
+                        $('#response-content').html('<p style="color: red;">An error occurred or no races matched the filter.</p>');
+                        $('#filter-races-modal').modal('hide'); // Close the modal
+                    },
+                });
+            }
+
+            function renderFilteredRacesTable(races, page) {
+                
+                let tableHtml = `
+                    <table class="ui celled inverted table">
+                    <thead>
+                        <tr>
+                            <th>Driver ID</th>
+                            <th>Circuit ID</th>
+                            <th>Race Date</th>
+                            <th>Place</th>
+                            <th>Points</th>
+                            <th>Fastest Lap</th>
+                            <th>Start Place</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `;
+
+                races.forEach(race => {
+                    tableHtml += `
+                                <tr>
+                                    <td data-label="Race ID">${race.driver_id}</td>
+                                    <td data-label="Circuit ID">${race.circuit_id}</td>
+                                    <td data-label="Race Date">${race.race_date}</td>
+                                    <td data-label="Place">${race.place}</td>
+                                    <td data-label="Points">${race.points}</td>
+                                    <td data-label="Fastest Lap">${race.is_fastest_lap}</td>
+                                    <td data-label="Start Place">${race.start_place}</td>
+                                </tr>
+                    `;
+                });
+
+                tableHtml += `
+                        </tbody>
+                    </table>
+                `;
+
+                let paginationHtml = `
+                    <div class="ui pagination inverted menu">
+                        <a class="item" data-page="${page - 1}" ${page === 1 ? 'disabled' : ''}>Previous</a>
+                `;
+
+                const totalPages = 1;
+                const startPage = Math.max(1, page - 2);
+                const endPage = Math.min(totalPages, page + 2);
+
+                for (let i = startPage; i <= endPage; i++) {
+                    paginationHtml += `
+                        <a class="item ${i === page ? 'active' : ''}" data-page="${i}">${i}</a>
+                    `;
+                }
+
+                paginationHtml += `
+                        <a class="item" data-page="${page + 1}" ${page === totalPages ? 'disabled' : ''}>Next</a>
+                    </div>
+                `;
+
+                $('#response-content').html(tableHtml + paginationHtml);
+
+                $('.ui.pagination.menu .item').not('[disabled]').click(function () {
+                    const newPage = $(this).data('page');
+                    fetchFilteredRaces(newPage);
+                });
+            }
+
+            fetchFilteredRaces(currentPage);
+        });
+
     });
 });

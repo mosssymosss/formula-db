@@ -224,7 +224,7 @@
             <div class="ui form">
                 <div class="field">
                     <label>Nationality</label>
-                    <input type="text" id="filter-drivers-input" placeholder="Enter nationality...">
+                    <input type="text" id="filter-nationality-input" placeholder="Enter nationality...">
                 </div>
                 <div class="field">
                     <label>Team</label>
@@ -250,6 +250,55 @@
                 Cancel
             </div>
             <div class="ui green ok inverted button" id="filter-drivers-search-button">
+                <i class="checkmark icon"></i>
+                Search
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="filter-races-modal">
+        <div class="ui icon header">
+            <i class="filter icon"></i>
+            Filter Drivers
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Driver ID</label>
+                    <input type="text" id="filter-races-driver-id-input" placeholder="Enter driver ID...">
+                </div>
+                <div class="field">
+                    <label>Circuit ID</label>
+                    <input type="text" id="filter-races-circuit-id-input" placeholder="Enter circuit ID...">
+                </div>
+                <div class="field">
+                    <label>Start Date</label>
+                    <input type="text" id="filter-start-date-input" placeholder="Enter start date...">
+                </div>
+                <div class="field">
+                    <label>End Date</label>
+                    <input type="text" id="filter-end-date-input" placeholder="Enter end date...">
+                </div>
+                <div class="field">
+                    <label>Minimum Points</label>
+                    <input type="text" id="filter-min-points-input" placeholder="Enter minimum points...">
+                </div>
+                <div class="field">
+                    <label>Maximum Points</label>
+                    <input type="text" id="filter-max-points-input" placeholder="Enter maximum points...">
+                </div>
+                <div class="field">
+                    <label>Fastest Lap</label>
+                    <input type="text" id="filter-fastest-lap-input" placeholder="Enter true if fastest lap false if not...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="filter-races-search-button">
                 <i class="checkmark icon"></i>
                 Search
             </div>
