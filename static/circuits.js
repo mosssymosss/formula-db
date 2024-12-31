@@ -545,6 +545,37 @@ document.addEventListener('DOMContentLoaded', function() {
             fetchSearchCircuits(currentPage);
         });
 
-        
+        $('#most-popular-circuit-button').click(function () {
+            $.ajax({
+                url: `/circuits/most_popular/`,
+                method: 'GET',
+                success: function (circuit) {
+                    const circuitHtml = `
+                        <table class="ui celled inverted table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                    <th>Number of Races</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Name">${circuit.name}</td>
+                                    <td data-label="Location">${circuit.location}</td>
+                                    <td data-label="Length (km)">${circuit.num_races}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    `;
+
+                    $('#response-content').html(circuitHtml); 
+                },
+                error: function (error) {
+                    console.error('Error fetching circuit:', error);
+                    $('#response-content').html('<p style="color: red;">Circuit not found or an error occurred.</p>');
+                },
+            });
+        });
     });
 });

@@ -277,7 +277,7 @@ def get_sorted_circuits(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
-@app.get("/circuits/most-popular/", response_model=schemas.CircuitPopularityResponse, tags=["Circuits"])
+@app.get("/circuits/most_popular/", response_model=schemas.CircuitPopularityResponse, tags=["Circuits"])
 def get_most_popular_circuit(db: Session = Depends(get_db)):
     # Get the most popular circuit
     try:
