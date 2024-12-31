@@ -4,6 +4,8 @@ Run this command
 
     pip install -r requirements.txt
 
+
+
 You need to have a .env file that has your configurations, i.e.
 
     POSTGRES_ADMIN_USER={admin_username} // username with privileges to create new users and databases
@@ -20,9 +22,16 @@ You need to have a .env file that has your configurations, i.e.
 
 Alembic relies on the DATABASE_URL
 
+
+
 Run the init.db file to make the database and it's tables
 
-Run alembic migrations
+
+Apply all migration by running this
+
+    alembig upgrade head
+
+
 
 Run the populate_db_random.py to populate the database with random data
 
@@ -34,9 +43,13 @@ It also takes as an argument which of the tables it should generate, by default 
 
 The races table depend on the drivers and circuits table, make sure they exist when generating only the races table
 
+
+
 Run this to see how to use populate_bd_random.py
 
     python populate_db_random.py --help
+
+
 
 
 While in the directpry of the project, run 
