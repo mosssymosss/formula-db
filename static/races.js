@@ -298,5 +298,33 @@ document.addEventListener('DOMContentLoaded', function() {
             fetchFilteredRaces(currentPage);
         });
 
+        $('#delete-race-button').click(function () {
+            $('#race-id-modal').modal('show');
+        });
+        
+        $('#search-race-button').click(function () {
+            const driverId = $('#race-driver-id-input').val(); 
+            const circuitId = $('#race-circuit-id-input').val();
+            const raceDate = $('#race-date-input').val(); 
+        
+            if (!driverId && !circuitId && !raceDate) {
+                alert('Please enter valid values');
+                return;
+            }
+        
+            $.ajax({
+                url: `/races/${driverId}/${circuitId}/${raceDate}`,
+                method: 'DELETE',
+                success: function (response) {
+                    $('#response-content').html('Race has been deleted successfully.');
+                    $('#race-id-modal').modal('hide');
+                },
+                error: function (error) {
+                    alert('An error occurred while deleting.');
+                    $('#race-id-modal').modal('hide');
+                },
+            });
+        });
+
     });
 });

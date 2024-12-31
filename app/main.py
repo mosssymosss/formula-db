@@ -102,7 +102,7 @@ def get_driver_by_id(driver_id: int, db: Session = Depends(get_db)):
 def update_driver(driver_id: int, driver: schemas.DriverUpdate, db: Session = Depends(get_db)):
     return crud.update_driver(db, driver, driver_id)
 
-@app.delete("/drivers/{driver_id}", response_model=schemas.DriverResponse, tags=["Drivers"])
+@app.delete("/drivers/{driver_id}", response_model=dict, tags=["Drivers"])
 def delete_driver(driver_id: int, db: Session = Depends(get_db)):
     # Delete a driver by ID
     try:
@@ -233,7 +233,7 @@ def update_circuit(circuit_id: int, circuit: schemas.CircuitUpdate, db: Session 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
-@app.delete("/circuits/{circuit_id}", response_model=schemas.CircuitResponse, tags=["Circuits"])
+@app.delete("/circuits/{circuit_id}", response_model=dict, tags=["Circuits"])
 def delete_circuit(circuit_id: int, db: Session = Depends(get_db)):
     # Delete a circuit by ID
     try:
@@ -360,7 +360,7 @@ def update_race(driver_id: int, circuit_id: int, race_date: str, db: Session = D
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
-@app.delete("/races/{driver_id}/{circuit_id}/{race_date}", response_model=schemas.RaceResponse, tags=["Races"])
+@app.delete("/races/{driver_id}/{circuit_id}/{race_date}", response_model=dict, tags=["Races"])
 def delete_race(driver_id: int, circuit_id: int, race_date: str, db: Session = Depends(get_db)):
     # Delete a race by driver ID, circuit ID and race date
     try:

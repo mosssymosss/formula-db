@@ -409,5 +409,31 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
 
+        $('#delete-driver-button').click(function () {
+            $('#driver-id-modal').modal('show');
+        });
+        
+        $('#search-driver-button').click(function () {
+            const driverId = $('#driver-id-input').val(); 
+        
+            if (!driverId) {
+                alert('Please enter a valid Driver ID');
+                return;
+            }
+        
+            $.ajax({
+                url: `/drivers/${driverId}`,
+                method: 'DELETE',
+                success: function (response) {
+                    $('#response-content').html('Driver has been deleted successfully.');
+                    $('#driver-id-modal').modal('hide');
+                },
+                error: function (error) {
+                    alert('An error occurred while deleting.');
+                    $('#driver-id-modal').modal('hide');
+                },
+            });
+        });
+
     });
 });

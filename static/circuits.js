@@ -577,5 +577,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
             });
         });
+
+        $('#delete-circuit-button').click(function () {
+            $('#circuit-id-modal').modal('show');
+        });
+        
+        $('#search-circuit-button').click(function () {
+            const circuitId = $('#circuit-id-input').val(); 
+        
+            if (!circuitId) {
+                alert('Please enter a valid Circuit ID');
+                return;
+            }
+        
+            $.ajax({
+                url: `/circuits/${circuitId}`,
+                method: 'DELETE',
+                success: function (response) {
+                    $('#response-content').html('Circuit has been deleted successfully.');
+                    $('#circuit-id-modal').modal('hide');
+                },
+                error: function (error) {
+                    alert('An error occurred while deleting.');
+                    $('#circuit-id-modal').modal('hide');
+                },
+            });
+        });
+
     });
 });
