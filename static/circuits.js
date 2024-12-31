@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         $('#search-circuit-button').click(function () {
             const circuitId = $('#circuit-id-input').val(); 
-
+            console.log(circuitId);
             if (!circuitId) {
                 alert('Please enter a valid Circuit ID');
                 return;
@@ -579,11 +579,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         $('#delete-circuit-button').click(function () {
-            $('#circuit-id-modal').modal('show');
+            $('#circuit-id-modal-2').modal('show');
         });
         
-        $('#search-circuit-button').click(function () {
-            const circuitId = $('#circuit-id-input').val(); 
+        $('#search-circuit-button-2').click(function () {
+            const circuitId = $('#circuit-id-input-2').val(); 
         
             if (!circuitId) {
                 alert('Please enter a valid Circuit ID');
@@ -595,13 +595,109 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'DELETE',
                 success: function (response) {
                     $('#response-content').html('Circuit has been deleted successfully.');
-                    $('#circuit-id-modal').modal('hide');
+                    $('#circuit-id-modal-2').modal('hide');
                 },
                 error: function (error) {
                     alert('An error occurred while deleting.');
-                    $('#circuit-id-modal').modal('hide');
+                    $('#circuit-id-modal-2').modal('hide');
                 },
             });
+        });
+
+
+        $('#create-circuit-button').click(function () {
+            $('#create-circuits-modal').modal('show');
+        });
+    
+        // Handle the Create Circuit confirmation button
+        $('#create-circuits-search-button').click(function () {
+            const circuitId = $('#create-circuit-id-input').val();
+            const circuitName = $('#create-name-input-2').val();
+            console.log($('#create-name-input-2').val());
+            const circuitLocation = $('#create-location-input').val();
+            const circuitLength = $('#create-length-input').val();
+            const circuitLaps = $('#create-laps-input').val();
+            const circuitLapRecord = $('#create-lap-record-input').val();
+            const circuitDescription = $('#create-description-input').val();
+            const circuitCreatedBy = $('#create-created-by-input').val();
+            const circuitCreatedAt = $('#create-created-at-input').val();
+            const circuitIsActive = $('#create-is-active-input').val();
+            const circuitEventsHosted = $('#create-events-hosted-input').val();
+            const circuitAverageAttendance = $('#create-average-attendance-input').val();
+    
+            console.log({
+                circuitId,
+                circuitName,
+                circuitLocation,
+                circuitLength,
+                circuitLaps,
+                circuitLapRecord,
+                circuitDescription,
+                circuitCreatedBy,
+                circuitCreatedAt,
+                circuitIsActive,
+                circuitEventsHosted,
+                circuitAverageAttendance
+            });
+
+            //Validate required fields
+            if (
+                !circuitId ||
+                !circuitName ||
+                !circuitLocation ||
+                !circuitLength ||
+                !circuitLaps ||
+                !circuitLapRecord ||
+                !circuitDescription ||
+                !circuitCreatedBy ||
+                !circuitCreatedAt ||
+                !circuitIsActive ||
+                !circuitEventsHosted ||
+                !circuitAverageAttendance
+            ) {
+                alert('Please enter all required fields.');
+                return;
+            }
+    
+            // Prepare circuit data for the POST request
+            const circuitData = {
+                circuit_id: parseInt(circuitId),
+                name: circuitName,
+                location: circuitLocation,
+                length: parseFloat(circuitLength),
+                laps: parseInt(circuitLaps),
+                lap_record: circuitLapRecord,
+                info: {
+                    description: circuitDescription,
+                    created_by: circuitCreatedBy,
+                    created_at: circuitCreatedAt,
+                    is_active: circuitIsActive.toLowerCase() === 'true',
+                    events_hosted: parseInt(circuitEventsHosted),
+                    average_attendance: parseInt(circuitAverageAttendance),
+                },
+            };
+    
+            // Send POST request to create a new circuit
+            $.ajax({
+                url: `/circuits/`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(circuitData),
+                success: function (response) {
+                    $('#response-content').html('<p style="color: green;">Circuit has been created successfully.</p>');
+                    $('#create-circuits-modal').modal('hide');
+                },
+                error: function (error) {
+                    console.error('Error creating circuit:', error);
+                    alert('An error occurred while creating the circuit.');
+                    $('#create-circuits-modal').modal('hide');
+                },
+            });
+        });
+    
+        // Handle the cancel button to close the modal
+        $('.ui.red.basic.cancel.button').click(function () {
+            $('#create-circuits-modal').modal('hide');
         });
 
     });

@@ -72,6 +72,7 @@ class CircuitUpdate(BaseModel):
     length: Optional[float]
     laps: Optional[int]
     lap_record: Optional[str]
+    info: Optional[dict]
 
 
 class CircuitResponse(CircuitBase):

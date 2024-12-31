@@ -299,13 +299,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         $('#delete-race-button').click(function () {
-            $('#race-id-modal').modal('show');
+            $('#race-id-modal-2').modal('show');
         });
         
         $('#search-race-button').click(function () {
-            const driverId = $('#race-driver-id-input').val(); 
-            const circuitId = $('#race-circuit-id-input').val();
-            const raceDate = $('#race-date-input').val(); 
+            const driverId = $('#race-driver-id-input-2').val(); 
+            const circuitId = $('#race-circuit-id-input-2').val();
+            const raceDate = $('#race-date-input-2').val(); 
         
             if (!driverId && !circuitId && !raceDate) {
                 alert('Please enter valid values');
@@ -317,14 +317,87 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'DELETE',
                 success: function (response) {
                     $('#response-content').html('Race has been deleted successfully.');
-                    $('#race-id-modal').modal('hide');
+                    $('#race-id-modal-2').modal('hide');
                 },
                 error: function (error) {
                     alert('An error occurred while deleting.');
-                    $('#race-id-modal').modal('hide');
+                    $('#race-id-modal-2').modal('hide');
                 },
             });
         });
 
+
+        $('#create-race-button').click(function () {
+            $('#create-races-modal').modal('show');
+        });
+    
+        // Handle the Create Race confirmation button
+        $('#create-races-search-button').click(function () {
+            const driverId = $('#create-driver-id-input-2').val();
+            const circuitId = $('#create-circuit-id-input-2').val();
+            const raceDate = $('#create-race-date-input').val();
+            const place = $('#create-place-input').val();
+            const points = $('#create-points-input').val();
+            const isFastestLap = $('#create-is-fastest-lap-input').val();
+            const startPlace = $('#create-start-place-input').val();
+    
+            // Log the data for debugging purposes
+            console.log({
+                driverId,
+                circuitId,
+                raceDate,
+                place,
+                points,
+                isFastestLap,
+                startPlace,
+            });
+
+            // Validate required fields
+            if (
+                !driverId ||
+                !circuitId ||
+                !raceDate ||
+                !place ||
+                !points ||
+                !isFastestLap ||
+                !startPlace
+            ) {
+                alert('Please enter all required fields.');
+                return;
+            }
+    
+            // Prepare race data for the POST request
+            const raceData = {
+                driver_id: parseInt(driverId),
+                circuit_id: parseInt(circuitId),
+                race_date: raceDate,
+                place: parseInt(place),
+                points: parseInt(points),
+                is_fastest_lap: isFastestLap.toLowerCase() === 'true',
+                start_place: parseInt(startPlace),
+            };
+    
+            // Send POST request to create a new race
+            $.ajax({
+                url: `/races/`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(raceData),
+                success: function (response) {
+                    $('#response-content').html('<p style="color: green;">Race has been created successfully.</p>');
+                    $('#create-races-modal').modal('hide');
+                },
+                error: function (error) {
+                    console.error('Error creating race:', error);
+                    alert('An error occurred while creating the race.');
+                    $('#create-races-modal').modal('hide');
+                },
+            });
+        });
+    
+        // Handle the cancel button to close the modal
+        $('.ui.red.basic.cancel.button').click(function () {
+            $('#create-races-modal').modal('hide');
+        });
     });
 });

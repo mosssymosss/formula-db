@@ -410,11 +410,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         $('#delete-driver-button').click(function () {
-            $('#driver-id-modal').modal('show');
+            $('#driver-id-modal-3').modal('show');
         });
         
-        $('#search-driver-button').click(function () {
-            const driverId = $('#driver-id-input').val(); 
+        $('#search-driver-button-3').click(function () {
+            const driverId = $('#driver-id-input-3').val(); 
         
             if (!driverId) {
                 alert('Please enter a valid Driver ID');
@@ -426,11 +426,56 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'DELETE',
                 success: function (response) {
                     $('#response-content').html('Driver has been deleted successfully.');
-                    $('#driver-id-modal').modal('hide');
+                    $('#driver-id-modal-3').modal('hide');
+                    num_of_drivers -= 1;
                 },
                 error: function (error) {
                     alert('An error occurred while deleting.');
-                    $('#driver-id-modal').modal('hide');
+                    $('#driver-id-modal-3').modal('hide');
+                },
+            });
+        });
+        
+
+        $('#create-driver-button').click(function () {
+            $('#create-drivers-modal').modal('show');
+        });
+        
+        $('#create-drivers-search-button').click(function () {
+            const driverId = $('#create-driver-id-input').val();
+            const driverNumber = $('#create-number-input').val();
+            const driverName = $('#create-name-input').val();
+            const driverNationality = $('#create-nationality-input').val();
+            const driverTeam = $('#create-team-input').val();
+            const driverDob = $('#create-dob-input').val();
+        
+            if (!driverId || !driverNumber || !driverName || !driverNationality || !driverTeam || !driverDob) {
+                alert('Please enter all required fields');
+                return;
+            }
+        
+            const driverData = {
+                driver_id: parseInt(driverId),
+                number: parseInt(driverNumber),
+                name: driverName,
+                nationality: driverNationality,
+                team: driverTeam,
+                dob: driverDob
+            };
+        
+            $.ajax({
+                url: `/drivers/`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(driverData),
+                success: function (response) {
+                    $('#response-content').html('Driver has been created successfully.');
+                    $('#create-drivers-modal').modal('hide');
+                },
+                error: function (error) {
+                    console.error('Error creating driver:', error);
+                    alert('An error occurred while creating the driver.');
+                    $('#create-drivers-modal').modal('hide');
                 },
             });
         });
