@@ -1,0 +1,821 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    
+    <h1 style="text-align: center; color: #ffffff;">F1DB</h1>
+    <h2 style="color: #ffffff;">Dashboard</h2>
+    <p style="color: #ffffff;">Click on a button to get that component's functionality</p>
+    <div class="ui inverted three item menu">
+        <a class="red item" id="drivers-menu">Drivers</a>
+        <a class="red item" id="circuits-menu">Circuits</a>
+        <a class="red item" id="races-menu">Races</a>
+    </div>
+    <div id="content"></div>
+    <br>
+    
+
+    <div id="drivers-content" style="display: none; color: #ffffff;">
+        <h2 style="color: #ffffff;">Drivers</h2>
+        <p style="color: #ffffff;">Here you can find all the drivers functionality.</p>
+        <br>
+        <div class="ui equal width grid" style="text-align: center;" id="buttons-container">
+            <div class="ui grid">
+                <div class="four wide column">
+                    <button class="ui inverted blue basic button" id="all-drivers-button">All Drivers</button>
+                </div>
+                <div class="four wide column">
+                    <button class="ui inverted blue basic button" id="driver-by-id-button">Driver by ID</button>
+                </div>
+                <div class="four wide column">
+                    <button class="ui inverted blue basic button" id="filter-drivers-button">Filter Drivers</button>
+                </div>
+                <!-- <div class="five wide column">
+                    <button class="ui inverted blue basic button" id="race-results-button">Race results for Driver</button>
+                </div> -->
+                <div class="four wide column">
+                    <button class="ui inverted blue basic button" id="multiple-wins-button">Drivers with multiple wins</button>
+                </div>
+                <div class="four wide column">
+                    <button class="ui inverted blue basic button" id="total-points-button">Total Points for Driver</button>
+                </div>
+                <div class="four wide column">
+                    <button class="ui inverted red basic button" id="delete-driver-button">Delete Driver by ID</button>
+                </div>
+                <div class="four wide column">
+                    <button class="ui inverted green basic button" id="create-driver-button">Create Driver</button>
+                </div>
+                <div class="four wide column">
+                    <button class="ui inverted yellow basic button" id="update-driver-button">Update Existing Drivers</button>
+                </div>
+            </div>
+        </div>
+    </div>  
+    <div id="circuits-content" style="display: none; color: #ffffff"> 
+        <h2 style="color: #ffffff;">Circuits</h2>
+        <p style="color: #ffffff;">Here you can find all the circuits functionality.</p>
+        <br>
+        <div class="ui grid" style="text-align: center;">
+            <div class="five wide column">
+                <button class="ui inverted blue basic button" id="all-circuits-button">All Circuits</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted blue basic button" id="circuit-by-id-button">Circuits by ID</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted blue basic button" id="filter-circuits-button">Filter Circuits</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted blue basic button" id="sort-circuits-button">Sort Circuits</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted blue basic button" id="most-popular-circuit-button">Most Popular Circuit</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted blue basic button" id="search-circuits-button">Search in Circuits</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted red basic button" id="delete-circuit-button">Delete Circuit by ID</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted green basic button" id="create-circuit-button">Create Circuit</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted yellow basic button" id="update-circuit-button">Update Existing Circuit</button>
+            </div>
+        </div>
+    </div>
+    <div id="races-content" style="display: none; color: #ffffff">
+        <h2 style="color: #ffffff;">Races</h2>
+        <p style="color: #ffffff;">Here you can find all the races functionality.</p>
+        <br>
+        <div class="ui grid" style="text-align: center;">
+            <div class="five wide column">
+                <button class="ui inverted blue basic button" id="all-races-button">All Races</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted blue basic button" id="race-by-id-button">Races by ID</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted blue basic button" id="filter-races-button">Filter Races</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted yellow basic button" id="increment-points-button">Increment points for Race</button>
+            </div>
+            <div class="six wide column">
+                <button class="ui inverted green basic button" id="create-race-button">Create Race</button>
+            </div>
+            <div class="five wide column">
+                <button class="ui inverted yellow basic button" id="update-race-button">Update Existing Race</button>
+            </div>
+            <div class="sixteen wide column">
+                <button class="ui inverted red basic button" id="delete-race-button">Delete Race by ID</button>
+            </div>
+        </div>
+    </div>
+    <br><br><br>
+    <div id="response-content" style="color: #ffffff;"></div>
+    <br><br><br>
+    <button class="ui red button float-right;" id="reset-database-button">Reset Database</button>
+    
+    <!-- Modals -->
+
+    <div class="ui basic modal" id="reset-database-modal">
+        <div class="ui icon header">
+            <i class="warning sign icon"></i>
+            Confirm Database Reset
+        </div>
+        <div class="content">
+            <p>Are you sure you want to reset the database? This action cannot be undone.</p>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="confirm-reset-database-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="driver-id-modal">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Enter Driver ID
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="driver-id-input" placeholder="Enter Driver ID...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-driver-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="driver-id-modal-2">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Search for a Driver Total Points by ID (leave field empty to search all)
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="driver-id-input-2" placeholder="Enter Driver ID...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-driver-button-2">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="driver-id-modal-3">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Enter Driver ID
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="driver-id-input-3" placeholder="Enter Driver ID...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-driver-button-3">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="circuit-id-modal">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Enter Circuit ID
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="circuit-id-input" placeholder="Enter Circuit ID...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-circuit-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="circuit-id-modal-2">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Enter Circuit ID
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="circuit-id-input-2" placeholder="Enter Circuit ID...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-circuit-button-2">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="race-id-modal">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Enter Race ID
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="race-driver-id-input" placeholder="Enter Driver ID...">
+            </div>
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="race-circuit-id-input" placeholder="Enter Circuit ID...">
+            </div>
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="date" id="race-date-input" placeholder="Enter Race Date...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-race-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="race-id-modal-2">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Enter Race ID
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="race-driver-id-input-2" placeholder="Enter Driver ID...">
+            </div>
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="text" id="race-circuit-id-input-2" placeholder="Enter Circuit ID...">
+            </div>
+        </div>
+        <div class="content">
+            <div class="ui input">
+                <input type="date" id="race-date-input-2" placeholder="Enter Race Date...">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-race-button-2">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="filter-drivers-modal">
+        <div class="ui icon header">
+            <i class="filter icon"></i>
+            Filter Drivers
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Nationality</label>
+                    <input type="text" id="filter-nationality-input" placeholder="Enter nationality...">
+                </div>
+                <div class="field">
+                    <label>Team</label>
+                    <input type="text" id="filter-team-input" placeholder="Enter team...">
+                </div>
+                <div class="field">
+                    <label>Number</label>
+                    <input type="text" id="filter-number-input" placeholder="Enter number...">
+                </div>
+                <div class="field">
+                    <label>Circuit ID</label>
+                    <input type="text" id="filter-circuit-id-input" placeholder="Enter circuit ID...">
+                </div>
+                <div class="field">
+                    <label>Date of Birth</label>
+                    <input type="date" id="filter-dob-input" placeholder="Enter date of birth...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="filter-drivers-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="filter-circuits-modal">
+        <div class="ui icon header">
+            <i class="filter icon"></i>
+            Filter Circuits
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Location</label>
+                    <input type="text" id="filter-location-input" placeholder="Enter loaction...">
+                </div>
+                <div class="field">
+                    <label>Minimum Length</label>
+                    <input type="number" id="filter-minlen-input" placeholder="Enter minimum length...">
+                </div>
+                <div class="field">
+                    <label>Maximum Length</label>
+                    <input type="number" id="filter-maxlen-input" placeholder="Enter maximum length...">
+                </div>
+                <div class="field">
+                    <label>Minimum Laps</label>
+                    <input type="number" id="filter-minlap-input" placeholder="Enter minimum laps...">
+                </div>
+                <div class="field">
+                    <label>Maximum Laps</label>
+                    <input type="number" id="filter-maxlap-input" placeholder="Enter maximum laps...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="filter-circuits-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="sort-circuits-modal">
+        <div class="ui icon header">
+            <i class="filter icon"></i>
+            Sort Circuits
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Location</label>
+                    <input type="text" id="sort-input" placeholder="Enter what to sort by (length, laps, lap_record)...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="sort-circuits-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="search-circuits-modal">
+        <div class="ui icon header">
+            <i class="search icon"></i>
+            Search in Circuits
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Location</label>
+                    <input type="text" id="search-input" placeholder="Enter what to sort by...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="search-circuits-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="filter-races-modal">
+        <div class="ui icon header">
+            <i class="filter icon"></i>
+            Filter Races
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Driver ID</label>
+                    <input type="text" id="filter-races-driver-id-input" placeholder="Enter driver ID...">
+                </div>
+                <div class="field">
+                    <label>Circuit ID</label>
+                    <input type="text" id="filter-races-circuit-id-input" placeholder="Enter circuit ID...">
+                </div>
+                <div class="field">
+                    <label>Start Date</label>
+                    <input type="date" id="filter-start-date-input" placeholder="Enter start date...">
+                </div>
+                <div class="field">
+                    <label>End Date</label>
+                    <input type="date" id="filter-end-date-input" placeholder="Enter end date...">
+                </div>
+                <div class="field">
+                    <label>Minimum Points</label>
+                    <input type="text" id="filter-min-points-input" placeholder="Enter minimum points...">
+                </div>
+                <div class="field">
+                    <label>Maximum Points</label>
+                    <input type="text" id="filter-max-points-input" placeholder="Enter maximum points...">
+                </div>
+                <div class="field">
+                    <label>Fastest Lap</label>
+                    <input type="text" id="filter-fastest-lap-input" placeholder="Enter true if fastest lap false if not...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="filter-races-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="ui basic modal" id="create-drivers-modal">
+        <div class="ui icon header">
+            <i class="edit icon"></i>
+            Create Driver
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Circuit ID</label>
+                    <input type="text" id="create-driver-id-input" placeholder="Enter driver ID...">
+                </div>
+                <div class="field">
+                    <label>Number</label>
+                    <input type="text" id="create-number-input" placeholder="Enter number...">
+                </div>
+                <div class="field">
+                    <label>Name</label>
+                    <input type="text" id="create-name-input" placeholder="Enter name...">
+                </div>
+                <div class="field">
+                    <label>Nationality</label>
+                    <input type="text" id="create-nationality-input" placeholder="Enter nationality...">
+                </div>
+                <div class="field">
+                    <label>Team</label>
+                    <input type="text" id="create-team-input" placeholder="Enter team...">
+                </div>
+                <div class="field">
+                    <label>Date of Birth</label>
+                    <input type="date" id="create-dob-input" placeholder="Enter date of birth...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="create-drivers-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="create-circuits-modal">
+        <div class="ui icon header">
+            <i class="edit icon"></i>
+            Create Circuit
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Circuit ID</label>
+                    <input type="text" id="create-circuit-id-input" placeholder="Enter circuit ID...">
+                </div>
+                <div class="field">
+                    <label>Name</label>
+                    <input type="text" id="create-name-input-2" placeholder="Enter name...">
+                </div>
+                <div class="field">
+                    <label>Location</label>
+                    <input type="text" id="create-location-input" placeholder="Enter location...">
+                </div>
+                <div class="field">
+                    <label>Length</label>
+                    <input type="text" id="create-length-input" placeholder="Enter nationality...">
+                </div>
+                <div class="field">
+                    <label>Laps</label>
+                    <input type="text" id="create-laps-input" placeholder="Enter laps...">
+                </div>
+                <div class="field">
+                    <label>Lap Record</label>
+                    <input type="text" id="create-lap-record-input" placeholder="Enter lap record...">
+                </div>
+                <div class="field">
+                    <label>Description</label>
+                    <textarea type="text" id="create-description-input" placeholder="Enter description..."></textarea> 
+                </div>
+                <div class="field">
+                    <label>Created By</label>
+                    <input type="text" id="create-created-by-input" placeholder="Enter creator name...">
+                </div>
+                <div class="field">
+                    <label>Created At</label>
+                    <input type="date" id="create-created-at-input" placeholder="Select creation date and time...">
+                </div>
+                <div class="field">
+                    <label>Is Active</label>
+                    <input type="text" id="create-is-active-input" placeholder="Enter true id active false if not...">
+                </div>
+                <div class="field">
+                    <label>Events Hosted</label>
+                    <input type="number" id="create-events-hosted-input" placeholder="Enter number of events hosted...">
+                </div>
+                <div class="field">
+                    <label>Average Attendance</label>
+                    <input type="number" id="create-average-attendance-input" placeholder="Enter average attendance...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="create-circuits-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="create-races-modal">
+        <div class="ui icon header">
+            <i class="edit icon"></i>
+            Create Race
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>Driver ID</label>
+                    <input type="text" id="create-driver-id-input-2" placeholder="Enter driver ID...">
+                </div>
+                <div class="field">
+                    <label>Circuit ID</label>
+                    <input type="text" id="create-circuit-id-input-2" placeholder="Enter circuit ID...">
+                </div>
+                <div class="field">
+                    <label>Race Date</label>
+                    <input type="date" id="create-race-date-input" placeholder="Select race date...">
+                </div>
+                <div class="field">
+                    <label>Place</label>
+                    <input type="number" id="create-place-input" placeholder="Enter place...">
+                </div>
+                <div class="field">
+                    <label>Points</label>
+                    <input type="number" id="create-points-input" placeholder="Enter points...">
+                </div>
+                <div class="field">
+                    <label>Is Fastest Lap</label>
+                    <input type="text" id="create-is-fastest-lap-input" placeholder="Enter true if fastest lap false if not...">
+                </div>
+                <div class="field">
+                    <label>Start Place</label>
+                    <input type="number" id="create-start-place-input" placeholder="Enter start place...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="create-races-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+    
+    <div class="ui basic modal" id="update-driver-modal">
+        <div class="ui icon header">
+            <i class="edit icon"></i>
+            Update Driver
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label for="number">Driver ID</label>
+                    <input type="number" id="update-driver-id-input" placeholder="Enter Driver Id...">
+                </div>
+                <div class="field">
+                    <label for="number">Number</label>
+                    <input type="number" id="update-number-input" placeholder="Enter Driver Number...">
+                </div>
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input type="text" id="update-name-input" placeholder="Enter Driver Name...">
+                </div>
+                <div class="field">
+                    <label for="nationality">Nationality</label>
+                    <input type="text" id="update-nationality-input" placeholder="Enter Driver Nationality...">
+                </div>
+                <div class="field">
+                    <label for="team">Team</label>
+                    <input type="text" id="update-team-input" placeholder="Enter Driver Team...">
+                </div>
+                <div class="field">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="update-dob-input" placeholder="Enter Driver Date of Birth...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="update-driver-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="ui basic modal" id="update-circuit-modal">
+        <div class="ui icon header">
+            <i class="edit icon"></i>
+            Update Circuit
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label for="name">Circuit ID</label>
+                    <input type="text" id="update-circuit-id-input" placeholder="Enter Circuit ID...">
+                </div>
+                <div class="field">
+                    <label for="name">Circuit Name</label>
+                    <input type="text" id="update-circuit-name-input" placeholder="Enter Circuit Name...">
+                </div>
+                <div class="field">
+                    <label for="location">Location</label>
+                    <input type="text" id="update-circuit-location-input" placeholder="Enter Circuit Location...">
+                </div>
+                <div class="field">
+                    <label for="length">Length (in km)</label>
+                    <input type="number" id="update-circuit-length-input" placeholder="Enter Circuit Length...">
+                </div>
+                <div class="field">
+                    <label for="laps">Number of Laps</label>
+                    <input type="number" id="update-circuit-laps-input" placeholder="Enter Number of Laps...">
+                </div>
+                <div class="field">
+                    <label for="lap_record">Lap Record</label>
+                    <input type="text" id="update-circuit-lap-record-input" placeholder="Enter Lap Record...">
+                </div>
+                <div class="field">
+                    <label for="info-description">Description</label>
+                    <textarea id="update-circuit-info-description-input" placeholder="Enter Description..."></textarea>
+                </div>
+                <div class="field">
+                    <label for="info-created-by">Created By</label>
+                    <input type="text" id="update-circuit-info-created-by-input" placeholder="Enter Creator Name...">
+                </div>
+                <div class="field">
+                    <label for="info-created-at">Created At</label>
+                    <input type="date" id="update-circuit-info-created-at-input">
+                </div>
+                <div class="field">
+                    <label for="info-is-active">Is Active</label>
+                    <input type="text" id="update-circuit-info-is-active-input" placeholder="Enter true if active false if not...">
+                </div>
+                <div class="field">
+                    <label for="info-events-hosted">Events Hosted</label>
+                    <input type="number" id="update-circuit-info-events-hosted-input" placeholder="Enter Number of Events Hosted...">
+                </div>
+                <div class="field">
+                    <label for="info-average-attendance">Average Attendance</label>
+                    <input type="number" id="update-circuit-info-average-attendance-input" placeholder="Enter Average Attendance...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="update-circuit-confirm-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+    <div class="ui basic modal" id="update-race-modal">
+        <div class="ui icon header">
+            <i class="flag checkered icon"></i>
+            Update Race
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label for="place">Driver ID</label>
+                    <input type="number" id="update-race-driver-id-input" placeholder="Enter Driver ID...">
+                </div>
+                <div class="field">
+                    <label for="place">Circuit ID</label>
+                    <input type="number" id="update-race-circuit-id-input" placeholder="Enter Circuit ID...">
+                </div>
+                <div class="field">
+                    <label for="place">Race Date</label>
+                    <input type="date" id="update-race-date-input" placeholder="Enter Race Date...">
+                </div>
+                <div class="field">
+                    <label for="place">Place</label>
+                    <input type="number" id="update-race-place-input" placeholder="Enter Race Place...">
+                </div>
+                <div class="field">
+                    <label for="points">Points</label>
+                    <input type="number" id="update-race-points-input" placeholder="Enter Points Scored...">
+                </div>
+                <div class="field">
+                    <label for="is_fastest_lap">Fastest Lap</label>
+                    <input type="text" id="update-race-is-fastest-lap-input" placeholder="Enter true is fastest lap false if not...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="update-race-confirm-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -109,7 +109,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-
     print("Populating database with random data...")
     
     if "drivers" in args.tables:

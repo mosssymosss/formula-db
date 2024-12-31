@@ -169,6 +169,10 @@ def get_drivers_with_multiple_wins(db: Session, limit: int = 10, offset: int = 0
         for q in query
     ]
 
+def get_num_drivers(db: Session) -> dict:
+    num_drivers = db.query(Driver).count()
+    return {"num_drivers": num_drivers}
+
 '''
 Circuit CRUD
 '''
@@ -281,6 +285,11 @@ def search_info(db: Session, search: str, limit: int = 10, offset: int = 0) -> L
         raise HTTPException(status_code=404, detail="No circuits found")
     return circuits
 
+def get_num_circuits(db: Session) -> dict:
+    num_circuits = db.query(Circuit).count()
+    print(num_circuits)
+    return {"num_circuits": num_circuits}
+
 '''
 
 Race CRUD
@@ -313,9 +322,13 @@ def create_race(db: Session, race: RaceCreate) -> Race:
 
 def update_race(db: Session, driver_id: int, circuit_id: int, race_date: str, race: RaceUpdate) -> Race:
     db_race = get_race_by_ids(db, driver_id, circuit_id, race_date)
-       
-    for key, value in race.model_dump().items:
+    
+    if not db_race:
+        raise HTTPException(status_code=404, detail="Race not found")
+    
+    for key, value in race.dict().items():
         setattr(db_race, key, value)
+    
     db.commit()
     db.refresh(db_race)
     return db_race
@@ -369,3 +382,7 @@ def increment_fastest_lap_points(db: Session) -> dict:
 
     db.commit()
     return {"detail": "Fastest lap points have been incremented"}
+
+def get_num_races(db: Session) -> dict:
+    num_races = db.query(Race).count()
+    return {"num_races": num_races}
