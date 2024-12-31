@@ -6,14 +6,14 @@ Run this command
 
 
 
-You need to have a .env file that has your configurations, i.e.
+You need to have a file called .env that has your configurations, i.e.
 
-    POSTGRES_ADMIN_USER={admin_username} // username with privileges to create new users and databases
+    POSTGRES_ADMIN_USER={admin_username} # username with privileges to create new users and databases
     POSTGRES_ADMIN_PASSWORD={admin_username_password}
     POSTGRES_DB={your_db_name}
     POSTGRES_HOST={your_host}
     POSTGRES_PORT={your_port}
-    POSTGRES_CURRENT_USER={your_user} // username that will be using the created database
+    POSTGRES_CURRENT_USER={your_user} # username that will be using the created database, if it doesnt exist it will be created
     POSTGRES_CURRENT_USER_PASSWORD={your_user_password}
 
     DATABASE_URL=postgresql://${POSTGRES_CURRENT_USER}:${POSTGRES_CURRENT_USER_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
@@ -33,6 +33,20 @@ Apply all migration by running this
 
 
 
+
+While in the directpry of the project, run 
+
+    uvicorn app.main:app --reload
+
+then open you browser and go to
+
+    API_BASE_URL/home
+
+you will have access to the full ui
+
+
+
+
 Run the populate_db_random.py to populate the database with random data
 
 It takes command line arguments to specify the number of drivers, circuits and races it should generate
@@ -48,20 +62,5 @@ The races table depend on the drivers and circuits table, make sure they exist w
 Run this to see how to use populate_bd_random.py
 
     python populate_db_random.py --help
-
-
-
-
-While in the directpry of the project, run 
-
-    uvicorn app.main:app --reload
-
-then open you browser and go to
-
-    API_BASE_URL/home
-
-you will have access to the full ui
-
-
 
 
