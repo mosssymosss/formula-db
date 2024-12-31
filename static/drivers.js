@@ -480,5 +480,76 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+
+        $('#update-driver-button').click(function () {
+            $('#update-driver-modal').modal('show');
+        });
+    
+        // Handle the Update Driver confirmation button
+        $('#update-driver-search-button').click(function () {
+            // Collect the driver ID (ensure you have a way to pass the driver_id into the modal, e.g., via a hidden field or external selection)
+            const driverId = $('#update-driver-id-input').val(); // Ensure this field exists or you handle the driver ID dynamically
+    
+            // Collect the updated driver details
+            const driverNumber = $('#update-number-input').val();
+            const driverName = $('#update-name-input').val();
+            const driverNationality = $('#update-nationality-input').val();
+            const driverTeam = $('#update-team-input').val();
+            const driverDob = $('#update-dob-input').val();
+    
+            // Log the data for debugging purposes
+            console.log('Updating Driver:', {
+                driverId,
+                driverNumber,
+                driverName,
+                driverNationality,
+                driverTeam,
+                driverDob,
+            });
+    
+            // Validate the driver ID
+            if (!driverId) {
+                alert('Driver ID is required to update a driver.');
+                return;
+            }
+    
+            // Prepare the update data (only include fields that are not empty)
+            const updateData = {};
+            if (driverNumber) updateData.number = parseInt(driverNumber);
+            if (driverName) updateData.name = driverName;
+            if (driverNationality) updateData.nationality = driverNationality;
+            if (driverTeam) updateData.team = driverTeam;
+            if (driverDob) updateData.dob = driverDob;
+    
+            // Check if any data is provided
+            if (Object.keys(updateData).length === 0) {
+                alert('Please provide at least one field to update.');
+                return;
+            }
+    
+            // Send the PUT request to update the driver
+            $.ajax({
+                url: `/drivers/${driverId}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(updateData),
+                success: function (response) {
+                    $('#response-content').html('<p style="color: green;">Driver has been updated successfully.</p>');
+                    $('#update-driver-modal').modal('hide');
+                },
+                error: function (error) {
+                    console.error('Error updating driver:', error);
+                    alert('An error occurred while updating the driver.');
+                    $('#update-driver-modal').modal('hide');
+                },
+            });
+        });
+    
+        // Handle the cancel button to close the modal
+        $('.ui.red.basic.cancel.button').click(function () {
+            $('#update-driver-modal').modal('hide');
+        });
+
+
     });
 });

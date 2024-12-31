@@ -658,5 +658,51 @@
         </div>
     </div>
     
+    <div class="ui basic modal" id="update-driver-modal">
+        <div class="ui icon header">
+            <i class="edit icon"></i>
+            Update Driver
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label for="number">Driver ID</label>
+                    <input type="number" id="update-driver-id-input" placeholder="Enter Driver Id...">
+                </div>
+                <div class="field">
+                    <label for="number">Number</label>
+                    <input type="number" id="update-number-input" placeholder="Enter Driver Number...">
+                </div>
+                <div class="field">
+                    <label for="name">Name</label>
+                    <input type="text" id="update-name-input" placeholder="Enter Driver Name...">
+                </div>
+                <div class="field">
+                    <label for="nationality">Nationality</label>
+                    <input type="text" id="update-nationality-input" placeholder="Enter Driver Nationality...">
+                </div>
+                <div class="field">
+                    <label for="team">Team</label>
+                    <input type="text" id="update-team-input" placeholder="Enter Driver Team...">
+                </div>
+                <div class="field">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="update-dob-input" placeholder="Enter Driver Date of Birth...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="update-driver-search-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+    
+
     
 {% endblock %}
