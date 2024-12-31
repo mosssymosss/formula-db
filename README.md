@@ -25,9 +25,13 @@ Run the init.db file to make the database and it's tables
 Run alembic migrations
 
 Run the populate_db_random.py to populate the database with random data
+
 It takes command line arguments to specify the number of drivers, circuits and races it should generate
+
 By default driver=5000, circuits=5000, races=50000
+
 It also takes as an argument which of the tables it should generate, by default all of them are generated
+
 The races table depend on the drivers and circuits table, make sure they exist when generating only the races table
 
 Run this to see how to use populate_bd_random.py
