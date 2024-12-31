@@ -287,6 +287,7 @@ def search_info(db: Session, search: str, limit: int = 10, offset: int = 0) -> L
 
 def get_num_circuits(db: Session) -> dict:
     num_circuits = db.query(Circuit).count()
+    print(num_circuits)
     return {"num_circuits": num_circuits}
 
 '''

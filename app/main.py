@@ -405,7 +405,7 @@ def increment_fastest_lap_points(db: Session = Depends(get_db)):
 def get_num_races(db: Session = Depends(get_db)):
     # Get the number of circuits
     try:
-        return crud.get_num_circuits(db)
+        return crud.get_num_races(db)
     except HTTPException as e:
         raise e
     except Exception as e:
