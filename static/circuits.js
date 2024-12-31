@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td data-label="Circuit ID">${circuit.circuit_id}</td>
                         <td data-label="Name">${circuit.name}</td>
                         <td data-label="Location">${circuit.location}</td>
-                        <td data-label="Length (km)">${circuit.length_km}</td>
+                        <td data-label="Length (km)">${circuit.length}</td>
                         <td data-label="Laps">${circuit.laps}</td>
                         <td data-label="Lap Record">${circuit.lap_record}</td>
                         <td data-label="Description">${circuit.info.description}</td>
@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <td data-label="Circuit ID">${circuit.circuit_id}</td>
                                     <td data-label="Name">${circuit.name}</td>
                                     <td data-label="Location">${circuit.location}</td>
-                                    <td data-label="Length (km)">${circuit.length_km}</td>
+                                    <td data-label="Length (km)">${circuit.length}</td>
                                     <td data-label="Laps">${circuit.laps}</td>
                                     <td data-label="Lap Record">${circuit.lap_record}</td>
                                     <td data-label="Description">${circuit.info.description}</td>
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <td data-label="Circuit ID">${circuit.circuit_id}</td>
                                     <td data-label="Name">${circuit.name}</td>
                                     <td data-label="Location">${circuit.location}</td>
-                                    <td data-label="Length (km)">${circuit.length_km}</td>
+                                    <td data-label="Length (km)">${circuit.length}</td>
                                     <td data-label="Laps">${circuit.laps}</td>
                                     <td data-label="Lap Record">${circuit.lap_record}</td>
                                     <td data-label="Description">${circuit.info.description}</td>
@@ -379,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <td data-label="Circuit ID">${circuit.circuit_id}</td>
                                     <td data-label="Name">${circuit.name}</td>
                                     <td data-label="Location">${circuit.location}</td>
-                                    <td data-label="Length (km)">${circuit.length_km}</td>
+                                    <td data-label="Length (km)">${circuit.length}</td>
                                     <td data-label="Laps">${circuit.laps}</td>
                                     <td data-label="Lap Record">${circuit.lap_record}</td>
                                     <td data-label="Description">${circuit.info.description}</td>
@@ -495,7 +495,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <td data-label="Circuit ID">${circuit.circuit_id}</td>
                                     <td data-label="Name">${circuit.name}</td>
                                     <td data-label="Location">${circuit.location}</td>
-                                    <td data-label="Length (km)">${circuit.length_km}</td>
+                                    <td data-label="Length (km)">${circuit.length}</td>
                                     <td data-label="Laps">${circuit.laps}</td>
                                     <td data-label="Lap Record">${circuit.lap_record}</td>
                                     <td data-label="Description">${circuit.info.description}</td>

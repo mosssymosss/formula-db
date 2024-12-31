@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         $('#filter-drivers-search-button').click(function () {
             const team = $('#filter-team-input').val(); 
-            const nationality = $('#filter-nationality').val();
+            const nationality = $('#filter-nationality-input').val();
             const number = $('#filter-number-input').val();
             const circuitId = $('#filter-circuit-id-input').val();
             const dob = $('#filter-dob-input').val();

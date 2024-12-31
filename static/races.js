@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#race-id-modal-2').modal('show');
         });
         
-        $('#search-race-button').click(function () {
+        $('#search-race-button-2').click(function () {
             const driverId = $('#race-driver-id-input-2').val(); 
             const circuitId = $('#race-circuit-id-input-2').val();
             const raceDate = $('#race-date-input-2').val(); 
