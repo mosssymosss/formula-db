@@ -700,5 +700,98 @@ document.addEventListener('DOMContentLoaded', function() {
             $('#create-circuits-modal').modal('hide');
         });
 
+        $('#update-circuit-button').click(function () {
+            $('#update-circuit-modal').modal('show');
+        });
+    
+        // Handle the Update Circuit confirmation button
+        $('#update-circuit-confirm-button').click(function () {
+            // Collect the circuit ID (ensure you have a way to pass the circuit_id into the modal, e.g., via a hidden field or external selection)
+            const circuitId = $('#update-circuit-id-input').val(); // Ensure this field exists or handle circuit ID dynamically
+    
+            // Collect the updated circuit details
+            const circuitName = $('#update-circuit-name-input').val();
+            const circuitLocation = $('#update-circuit-location-input').val();
+            const circuitLength = $('#update-circuit-length-input').val();
+            const circuitLaps = $('#update-circuit-laps-input').val();
+            const circuitLapRecord = $('#update-circuit-lap-record-input').val();
+            const circuitInfoDescription = $('#update-circuit-info-description-input').val();
+            const circuitInfoCreatedBy = $('#update-circuit-info-created-by-input').val();
+            const circuitInfoCreatedAt = $('#update-circuit-info-created-at-input').val();
+            const circuitInfoIsActive = $('#update-circuit-info-is-active-input').val();
+            const circuitInfoEventsHosted = $('#update-circuit-info-events-hosted-input').val();
+            const circuitInfoAverageAttendance = $('#update-circuit-info-average-attendance-input').val();
+    
+            // Log the data for debugging purposes
+            console.log('Updating Circuit:', {
+                circuitId,
+                circuitName,
+                circuitLocation,
+                circuitLength,
+                circuitLaps,
+                circuitLapRecord,
+                circuitInfoDescription,
+                circuitInfoCreatedBy,
+                circuitInfoCreatedAt,
+                circuitInfoIsActive,
+                circuitInfoEventsHosted,
+                circuitInfoAverageAttendance,
+            });
+    
+            // Validate the circuit ID
+            if (!circuitId) {
+                alert('Circuit ID is required to update a circuit.');
+                return;
+            }
+    
+            // Prepare the update data (only include fields that are not empty)
+            const updateData = {};
+            if (circuitName) updateData.name = circuitName;
+            if (circuitLocation) updateData.location = circuitLocation;
+            if (circuitLength) updateData.length = parseFloat(circuitLength);
+            if (circuitLaps) updateData.laps = parseInt(circuitLaps);
+            if (circuitLapRecord) updateData.lap_record = circuitLapRecord;
+            updateData.info = {};
+            if (circuitInfoDescription) updateData.info.description = circuitInfoDescription;
+            if (circuitInfoCreatedBy) updateData.info.created_by = circuitInfoCreatedBy;
+            if (circuitInfoCreatedAt) updateData.info.created_at = circuitInfoCreatedAt;
+            if (circuitInfoIsActive) updateData.info.is_active = circuitInfoIsActive.toLowerCase() === 'true';
+            if (circuitInfoEventsHosted) updateData.info.events_hosted = parseInt(circuitInfoEventsHosted);
+            if (circuitInfoAverageAttendance) updateData.info.average_attendance = parseInt(circuitInfoAverageAttendance);
+    
+            // Remove `info` if no fields were added
+            if (Object.keys(updateData.info).length === 0) {
+                delete updateData.info;
+            }
+    
+            // Check if any data is provided
+            if (Object.keys(updateData).length === 0) {
+                alert('Please provide at least one field to update.');
+                return;
+            }
+    
+            // Send the PUT request to update the circuit
+            $.ajax({
+                url: `/circuits/${circuitId}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(updateData),
+                success: function (response) {
+                    $('#response-content').html('<p style="color: green;">Circuit has been updated successfully.</p>');
+                    $('#update-circuit-modal').modal('hide');
+                },
+                error: function (error) {
+                    console.error('Error updating circuit:', error);
+                    alert('An error occurred while updating the circuit.');
+                    $('#update-circuit-modal').modal('hide');
+                },
+            });
+        });
+    
+        // Handle the cancel button to close the modal
+        $('.ui.red.basic.cancel.button').click(function () {
+            $('#update-circuit-modal').modal('hide');
+        });
+
     });
 });

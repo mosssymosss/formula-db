@@ -573,7 +573,7 @@
                 </div>
                 <div class="field">
                     <label>Description</label>
-                    <input type="text" id="create-description-input" placeholder="Enter description...">
+                    <textarea type="text" id="create-description-input" placeholder="Enter description..."></textarea> 
                 </div>
                 <div class="field">
                     <label>Created By</label>
@@ -704,5 +704,73 @@
     </div>
     
 
-    
+    <div class="ui basic modal" id="update-circuit-modal">
+        <div class="ui icon header">
+            <i class="edit icon"></i>
+            Update Circuit
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label for="name">Circuit ID</label>
+                    <input type="text" id="update-circuit-id-input" placeholder="Enter Circuit ID...">
+                </div>
+                <div class="field">
+                    <label for="name">Circuit Name</label>
+                    <input type="text" id="update-circuit-name-input" placeholder="Enter Circuit Name...">
+                </div>
+                <div class="field">
+                    <label for="location">Location</label>
+                    <input type="text" id="update-circuit-location-input" placeholder="Enter Circuit Location...">
+                </div>
+                <div class="field">
+                    <label for="length">Length (in km)</label>
+                    <input type="number" id="update-circuit-length-input" placeholder="Enter Circuit Length...">
+                </div>
+                <div class="field">
+                    <label for="laps">Number of Laps</label>
+                    <input type="number" id="update-circuit-laps-input" placeholder="Enter Number of Laps...">
+                </div>
+                <div class="field">
+                    <label for="lap_record">Lap Record</label>
+                    <input type="text" id="update-circuit-lap-record-input" placeholder="Enter Lap Record...">
+                </div>
+                <div class="field">
+                    <label for="info-description">Description</label>
+                    <textarea id="update-circuit-info-description-input" placeholder="Enter Description..."></textarea>
+                </div>
+                <div class="field">
+                    <label for="info-created-by">Created By</label>
+                    <input type="text" id="update-circuit-info-created-by-input" placeholder="Enter Creator Name...">
+                </div>
+                <div class="field">
+                    <label for="info-created-at">Created At</label>
+                    <input type="date" id="update-circuit-info-created-at-input">
+                </div>
+                <div class="field">
+                    <label for="info-is-active">Is Active</label>
+                    <input type="text" id="update-circuit-info-is-active-input" placeholder="Enter true if active false if not...">
+                </div>
+                <div class="field">
+                    <label for="info-events-hosted">Events Hosted</label>
+                    <input type="number" id="update-circuit-info-events-hosted-input" placeholder="Enter Number of Events Hosted...">
+                </div>
+                <div class="field">
+                    <label for="info-average-attendance">Average Attendance</label>
+                    <input type="number" id="update-circuit-info-average-attendance-input" placeholder="Enter Average Attendance...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="update-circuit-confirm-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
