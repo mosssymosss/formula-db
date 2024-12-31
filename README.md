@@ -4,7 +4,7 @@ Run this command
 
     pip install -r requirements.txt
 
-You need to have a .env file that has your postgres configurations, i.e.
+You need to have a .env file that has your configurations, i.e.
 
     POSTGRES_ADMIN_USER={admin_username} // username with privileges to create new users and databases
     POSTGRES_ADMIN_PASSWORD={admin_username_password}
@@ -34,6 +34,16 @@ Run this to see how to use populate_bd_random.py
 
     python populate_db_random.py --help
 
+
+While in the directpry of the project, run 
+
+    uvicorn app.main:app --reload
+
+then open you browser and go to
+
+    API_BASE_URL/home
+
+you will have access to the full ui
 
 
 

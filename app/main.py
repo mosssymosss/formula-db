@@ -29,7 +29,7 @@ templates = Jinja2Templates(directory="templates")
 UI
 '''
 
-@app.get("/", tags=["UI"])
+@app.get("/home", tags=["UI"])
 def dashboard(request: Request):
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
