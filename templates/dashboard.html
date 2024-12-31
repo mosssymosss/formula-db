@@ -773,4 +773,49 @@
         </div>
     </div>
 
+    <div class="ui basic modal" id="update-race-modal">
+        <div class="ui icon header">
+            <i class="flag checkered icon"></i>
+            Update Race
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label for="place">Driver ID</label>
+                    <input type="number" id="update-race-driver-id-input" placeholder="Enter Driver ID...">
+                </div>
+                <div class="field">
+                    <label for="place">Circuit ID</label>
+                    <input type="number" id="update-race-circuit-id-input" placeholder="Enter Circuit ID...">
+                </div>
+                <div class="field">
+                    <label for="place">Race Date</label>
+                    <input type="date" id="update-race-date-input" placeholder="Enter Race Date...">
+                </div>
+                <div class="field">
+                    <label for="place">Place</label>
+                    <input type="number" id="update-race-place-input" placeholder="Enter Race Place...">
+                </div>
+                <div class="field">
+                    <label for="points">Points</label>
+                    <input type="number" id="update-race-points-input" placeholder="Enter Points Scored...">
+                </div>
+                <div class="field">
+                    <label for="is_fastest_lap">Fastest Lap</label>
+                    <input type="text" id="update-race-is-fastest-lap-input" placeholder="Enter true is fastest lap false if not...">
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui red basic cancel inverted button">
+                <i class="remove icon"></i>
+                Cancel
+            </div>
+            <div class="ui green ok inverted button" id="update-race-confirm-button">
+                <i class="checkmark icon"></i>
+                Confirm
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

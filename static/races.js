@@ -399,5 +399,73 @@ document.addEventListener('DOMContentLoaded', function() {
         $('.ui.red.basic.cancel.button').click(function () {
             $('#create-races-modal').modal('hide');
         });
+
+
+        $('#update-race-button').click(function () {
+            $('#update-race-modal').modal('show');
+        });
+    
+        // Handle the Update Race confirmation button
+        $('#update-race-confirm-button').click(function () {
+            // Collect the race identifiers (driver_id, circuit_id, race_date) from hidden inputs or external selection
+            const driverId = $('#update-race-driver-id-input').val(); // Ensure this field exists
+            const circuitId = $('#update-race-circuit-id-input').val(); // Ensure this field exists
+            const raceDate = $('#update-race-date-input').val(); // Ensure this field exists
+    
+            // Collect the updated race details
+            const place = $('#update-race-place-input').val();
+            const points = $('#update-race-points-input').val();
+            const isFastestLap = $('#update-race-is-fastest-lap-input').val();
+    
+            // Log the data for debugging purposes
+            console.log('Updating Race:', {
+                driverId,
+                circuitId,
+                raceDate,
+                place,
+                points,
+                isFastestLap,
+            });
+    
+            // Validate the required fields
+            if (!driverId || !circuitId || !raceDate) {
+                alert('Driver ID, Circuit ID, and Race Date are required to update a race.');
+                return;
+            }
+    
+            // Prepare the update data (only include fields that are not empty)
+            const updateData = {};
+            if (place) updateData.place = parseInt(place);
+            if (points) updateData.points = parseInt(points);
+            if (isFastestLap) updateData.is_fastest_lap = isFastestLap.toLowerCase() === 'true';
+    
+            // Check if any data is provided
+            if (Object.keys(updateData).length === 0) {
+                alert('Please provide at least one field to update.');
+                return;
+            }
+    
+            // Send the PUT request to update the race
+            $.ajax({
+                url: `/races/?driver_id=${driverId}&circuit_id=${circuitId}&race_date=${raceDate}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(updateData),
+                success: function (response) {
+                    $('#response-content').html('<p style="color: green;">Race has been updated successfully.</p>');
+                    $('#update-race-modal').modal('hide');
+                },
+                error: function (error) {
+                    console.error('Error updating race:', error);
+                    alert('An error occurred while updating the race.');
+                    $('#update-race-modal').modal('hide');
+                },
+            });
+        });
+    
+        // Handle the cancel button to close the modal
+        $('.ui.red.basic.cancel.button').click(function () {
+            $('#update-race-modal').modal('hide');
+        });
     });
 });

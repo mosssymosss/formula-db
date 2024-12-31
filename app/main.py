@@ -351,10 +351,10 @@ def read_race(driver_id: int, circuit_id: int, race_date: str, db: Session = Dep
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 @app.put("/races/", response_model=schemas.RaceResponse, tags=["Races"])
-def update_race(driver_id: int, circuit_id: int, race_date: str, db: Session = Depends(get_db)):
+def update_race(driver_id: int, circuit_id: int, race_date: str, race: schemas.RaceUpdate, db: Session = Depends(get_db)):
     # Update a race by driver ID, circuit ID and race date
     try:
-        return crud.update_race(db, driver_id, circuit_id, race_date)
+        return crud.update_race(db, driver_id, circuit_id, race_date, race)
     except HTTPException as e:
         raise e
     except Exception as e:

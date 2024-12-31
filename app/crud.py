@@ -322,9 +322,13 @@ def create_race(db: Session, race: RaceCreate) -> Race:
 
 def update_race(db: Session, driver_id: int, circuit_id: int, race_date: str, race: RaceUpdate) -> Race:
     db_race = get_race_by_ids(db, driver_id, circuit_id, race_date)
-       
-    for key, value in race.model_dump().items:
+    
+    if not db_race:
+        raise HTTPException(status_code=404, detail="Race not found")
+    
+    for key, value in race.dict().items():
         setattr(db_race, key, value)
+    
     db.commit()
     db.refresh(db_race)
     return db_race
