@@ -467,5 +467,25 @@ document.addEventListener('DOMContentLoaded', function() {
         $('.ui.red.basic.cancel.button').click(function () {
             $('#update-race-modal').modal('hide');
         });
+
+        $('#increment-points-button').click(function () {
+            // Send the PUT request
+            $.ajax({
+                url: '/races/increment_fastest_lap_points/',
+                method: 'PUT',
+                success: function (response) {
+                    // Display a success message
+                    $('#response-content').html('<p style="color: green;">Fastest lap points have been incremented successfully for applicable races.</p>');
+    
+                    // Optionally log the response for debugging
+                    console.log('Response:', response);
+                },
+                error: function (error) {
+                    // Handle errors
+                    console.error('Error incrementing fastest lap points:', error);
+                    alert('An error occurred while incrementing fastest lap points. Please try again.');
+                },
+            });
+        });
     });
 });

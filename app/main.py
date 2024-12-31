@@ -391,7 +391,7 @@ def get_races_with_filters(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
-@app.put("/races/increment_fastest_lap_points/", response_model=List[schemas.RaceResponse], tags=["Races"])
+@app.put("/races/increment_fastest_lap_points/", response_model=dict, tags=["Races"])
 def increment_fastest_lap_points(db: Session = Depends(get_db)):
     # Increment points for fastest laps
     try:
